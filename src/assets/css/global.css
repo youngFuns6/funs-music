@@ -1,0 +1,14 @@
+h1 {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    min-width: 1485px;
+    background-color: #F5F5F5;
+}
+
+.el-input.is-active .el-input__inner, .el-input__inner:focus {
+    border-color: transparent;
+    outline: 0;
+} 
