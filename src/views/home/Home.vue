@@ -21,9 +21,10 @@
 <script>
 import BannerImg from "../../components/banner/BannerImg.vue"; // 导入 banner 图组件
 import NewSongs from "../homeChildren/newSongs.vue"; // 导入新碟组件
+import newSongInfo from "../homeChildren/newSongInfo.vue"; // 导入新碟详情组件
 
 import { getBannerImg } from "../../network/bannerImg"; // 导入获取 banner 请求函数
-import { getNewSong } from "../../network/Sing";
+import { getNewSong } from "../../network/Sing"; 
 
 export default {
   name: "home",
@@ -65,7 +66,7 @@ export default {
     // 获取新碟数据
     async getNewSongsRef() {
       const { data: res } = await getNewSong(this.newSongsInfo.queryInfo);
-      console.log(res);
+      // console.log(res);
       if (res.code !== 200) {
         return this.$message.error("新碟列表请求失败");
       }
@@ -86,12 +87,14 @@ export default {
     },
     // 获取 newSongs 子组件 传来的地区切换数据
     getAreaInfo(areaInfo) {
-      console.log(areaInfo)
+      // console.log(areaInfo)
       this.newSongsInfo.queryInfo.area = areaInfo;
       // 将请求数据的偏移量重置为 0
       this.newSongsInfo.queryInfo.offset;
       this.getNewSongsRef();
     },
+
+    
   },
   created() {
     this.getBannerImgRef();
@@ -100,6 +103,7 @@ export default {
   components: {
     BannerImg,
     NewSongs,
+    newSongInfo
   },
 };
 </script>

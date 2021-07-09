@@ -26,7 +26,12 @@ import {
   FormItem,
   Autocomplete,
   Card,
-  Pagination
+  Pagination,
+  Table,
+  TableColumn,
+  Divider,
+  Tooltip,
+  Loading
 
 } from 'element-ui'
 
@@ -45,9 +50,36 @@ Vue.use(FormItem)
 Vue.use(Autocomplete)
 Vue.use(Card)
 Vue.use(Pagination)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Divider)
+Vue.use(Tooltip)
 
 
 Vue.prototype.$message = Message
+Vue.prototype.$loading = Loading
+
+
+// 时间过滤器
+Vue.filter('dataFormate', function (time) {
+  let dt = new Date(time);
+  let y = dt.getFullYear();
+  let m = (dt.getMonth() + 1 + '').padStart(2, '0');
+  let d = (dt.getDate() + '').padStart(2, '0');
+  return `${y}-${m}-${d}`
+})
+
+// 毫秒过滤器
+Vue.filter('secondFormate', function (s) {
+  let time = parseFloat(s) / 1000;
+  if (time != null && time != '') {
+    if (time < 60) { return (parseInt(time) + '').padStart(2, '0') }
+    else if (time >= 60 && time <= 60 * 60) { return `${(parseInt(parseFloat(time / 60)) + '').padStart(2, '0')}:${(parseInt(parseFloat(time % 60)) + '').padStart(2, '0')}` }
+  } else {
+    return `${(parseInt(parseFloat(time / 60 / 60)) + '').padStart(2, '0')}:${((parseInt(parseFloat(time / 60 % 60)) + '') + '').padStart(2, '0')}:${(parseInt(parseFloat(time / 60 % 60 * 60 % 60)) + '').padStart(2, '0')}`
+  }
+
+})
 
 Vue.config.productionTip = false
 

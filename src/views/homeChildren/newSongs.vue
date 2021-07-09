@@ -20,7 +20,11 @@
             <li v-for="item in this.$store.state.resSongs" :key="item.id">
               <div class="cover">
                 <img :src="item.picUrl" alt="" />
-                <a href="#" class="mask"></a>
+                <a
+                  href="#"
+                  class="mask"
+                  @click.prevent="toggleNewSongInfo(item.id)"
+                ></a>
                 <p>{{ item.name }}</p>
                 <p>{{ item.artist.name }}</p>
               </div>
@@ -33,6 +37,7 @@
 </template>
     
 <script>
+import {  mapMutations } from "vuex";
 export default {
   name: "newSongs",
 
@@ -40,6 +45,7 @@ export default {
     return {};
   },
   methods: {
+    // 点击地区分类 切换相应内容
     toggleZH() {
       this.$emit("getArea", "ZH");
     },
@@ -51,6 +57,18 @@ export default {
     },
     toggleJP() {
       this.$emit("getArea", "JP");
+    },
+
+    // vuex 中相关处理数据函数
+    ...mapMutations(["albumIdMutations"]),
+
+    // 点击新碟 跳转至该碟详情
+    toggleNewSongInfo(id) {
+      this.$router.push("/newSongInfo");
+      this.albumIdMutations(id);
+      // console.log(id)
+      // 将 新碟 id 保存至本地
+        window.sessionStorage.setItem('albumId', JSON.stringify(id))
     },
   },
 };

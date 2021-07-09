@@ -13,7 +13,6 @@
           <el-menu
             :default-active="activeIndex"
             mode="horizontal"
-            @select="handleSelect"
             background-color="#545c64"
             text-color="#DFDFDF"
             active-text-color="#fff"
@@ -24,7 +23,7 @@
               ></el-menu-item
             >
             <el-menu-item index="2"
-              ><router-link to="/hottopic" tag="div" class="link-div"
+              ><router-link to="/mymusic" tag="div" class="link-div"
                 >我的音乐</router-link
               ></el-menu-item
             >
@@ -49,21 +48,36 @@
         <el-col :span="8" class="colInput">
           <search></search>
           <div class="login" @click="login" v-if="isAvatar">登录</div>
-          <div class="avatar" v-else>
-            <img
-              :src="avatarUrl"
-              alt=""
-              srcset=""
-              @mouseover="showUserInfo"
-              @mouseleave="remeveUserInfo"
-            />
+          <div class="avatar" v-else @mouseover="showUserInfo">
+            <img :src="avatarUrl" alt="" srcset="" />
             <span>{{ nickName }}</span>
+
+            <!-- 用户信息 -->
+            <user-info>
+              <template #level>
+                我的等级是：<span class="infoFont"
+                  >{{ userInfoObj.level }}级</span
+                >
+              </template>
+              <template #listenSongs>
+                已听歌曲数量：<span class="infoFont"
+                  >{{ userInfoObj.listenSongs }}首</span
+                >
+              </template>
+              <template #createDays>
+                使用天数：<span class="infoFont"
+                  >{{ userInfoObj.createDays }}天</span
+                >
+              </template>
+            </user-info>
           </div>
+          <el-button type="primary" size="mini" @click="quit" v-show="isButton">退出</el-button>
         </el-col>
       </el-row>
     </div>
 
     <!--  发现音乐 我的音乐 歌手 歌单 MV -->
+
     <router-view></router-view>
 
     <!-- 登录对话框 -->
@@ -73,30 +87,16 @@
       :ctrIsShow="isShow"
       @ctrClose="ctrClosed"
     ></login-dialog>
-    <!-- 用户信息 -->
-    <user-info v-show="isUserInfo">
-      <template #level>
-        我的等级是：<span class="infoFont">{{ userInfoObj.level }}</span> 级
-      </template>
-      <template #listenSongs>
-        已听歌曲数量：<span class="infoFont">{{
-          userInfoObj.listenSongs
-        }}</span>
-        首
-      </template>
-      <template #createDays>
-        使用天数：<span class="infoFont">{{ userInfoObj.createDays }}</span> 天
-      </template>
-    </user-info>
   </div>
 </template>
     
 <script>
 import LoginDialog from "./login/Login.vue"; // 导入登录框组件
-import Search from '../headers/serach/Search.vue'; // 导入搜索框组件
+import Search from "../headers/serach/Search.vue"; // 导入搜索框组件
 import userInfo from "./userInfo/userInfo.vue"; // 导入用户详情信息组件
-import { getUserInfo } from "../../network/login"; // 用户详情信息 网络请求
-
+import { getUserInfo, getQuit } from "../../network/login"; // 用户详情信息 网络请求
+import newSongInfo from "../../views/homeChildren/newSongInfo.vue"; // 新碟详情组件
+import { removeCookie } from "../../utils/cookie";
 
 export default {
   name: "headerMenu",
@@ -110,20 +110,36 @@ export default {
       avatarUrl: "",
       // 用户昵称
       nickName: "",
-      // 是否展示用户信息下拉框
-      isUserInfo: false,
       // 用户详情
       userInfoObj: {
-        level: null,
+        level: 0,
         listenSongs: null,
         createDays: null,
       },
-
-      
+      // 退出按钮隐藏与显示
+      isButton: false,
     };
   },
+
+  created() {
+    this.isLogin();
+  },
+
   methods: {
-    handleSelect() {},
+    // 刷新页面判断用户是否登录
+    isLogin() {
+      // console.log(this.$store.state.profile == null);
+      if (this.$store.state.profile === null) {
+        this.$store.state.profile = {};
+      } else {
+        this.isAvatar = false;
+        this.isButton = true;
+        this.avatarUrl = this.$store.state.profile.avatarUrl;
+        this.nickName = this.$store.state.profile.nickName;
+        // console.log(this.$store.state.profile.nickName);
+      }
+    },
+
     login() {
       this.isShow = true;
       // console.log(this.isShow)
@@ -131,39 +147,48 @@ export default {
     ctrClosed(v) {
       this.isShow = v; // 将子组件传的值重新赋给父组件的 isShow
       // console.log(v)
-
-      // 判断用户是否登录
-      if (this.$store.state.profile.avatarUrl) {
-        // console.log(this.$store.state.profile.avatarUrl)
-        this.isAvatar = false;
-        this.avatarUrl = this.$store.state.profile.avatarUrl;
-        this.nickName = this.$store.state.profile.nickName;
-      }
-      // this.isAvatar = true;
+      this.isAvatar = false;
+      this.isButton = true;
+      this.avatarUrl = this.$store.state.profile.avatarUrl;
+      this.nickName = this.$store.state.profile.nickName;
+      // console.log(this.$store.state.profile.nickName);
     },
 
     // 鼠标经过展示用户信息下拉框
     async showUserInfo() {
-      const { data: res } = await getUserInfo(this.$store.state.profile.userId);
-      // console.log(res)
-      this.userInfoObj.level = res.level;
-      this.userInfoObj.listenSongs = res.listenSongs;
-      this.userInfoObj.createDays = res.createDays;
-      this.isUserInfo = true;
-    },
-    // 鼠标离开隐藏用户信息下拉框
-    remeveUserInfo() {
-      // console.log('666')
-      this.isUserInfo = false;
+      if (this.userInfoObj.level === 0) {
+        const { data: res } = await getUserInfo(
+          this.$store.state.profile.userId
+        );
+        // console.log(res)
+
+        this.userInfoObj.level = res.level;
+        this.userInfoObj.listenSongs = res.listenSongs;
+        this.userInfoObj.createDays = res.createDays;
+      }
     },
 
-    
+    // 点击按钮退出登录
+    async quit() {
+      const { data: res } = await getQuit();
+      // console.log(res)
+      if (res.code === 200) {
+        this.$message.info("已退出登录");
+        // 退出登录 清空状态及本地数据
+        this.isAvatar = true;
+        window.sessionStorage.removeItem("profile");
+        // console.log(window.sessionStorage.getItem("profile"));
+        removeCookie("__remember_me");
+        this.isButton = false;
+      }
+    },
   },
 
   components: {
     LoginDialog,
     userInfo,
-    Search
+    Search,
+    newSongInfo,
   },
 };
 </script>
@@ -217,7 +242,7 @@ h1 {
   margin-left: 20px;
   width: 50px;
   border-radius: 50%;
-  vertical-align: middle;
+  // vertical-align: middle;
 }
 .avatar span {
   float: right;
@@ -226,6 +251,7 @@ h1 {
   line-height: 50px;
   font-size: 16px;
   color: #d6dfd7;
+
   &:hover {
     color: #fff;
     text-decoration-line: underline;
@@ -240,5 +266,17 @@ h1 {
   .link-div {
     padding: 0 30px;
   }
+}
+
+.userInfoBox {
+  display: none;
+}
+
+.avatar:hover .userInfoBox {
+  display: block;
+}
+
+.el-button {
+  margin-left: 20px;
 }
 </style>

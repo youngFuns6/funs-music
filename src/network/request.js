@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Vue from 'vue'
 // import { getCookie } from '../utils/cookie'
 
 export function request(config) {
@@ -7,8 +8,21 @@ export function request(config) {
         withCredentials: true  // 允许请求携带 cookie
     })
     instance.interceptors.request.use(config => {
-        
+        // 请求前显示加载动画
+        Vue.prototype.$loading.service({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+        })
         return config
     })
+    instance.interceptors.response.use(config => {
+        // 响应后关闭加载动画
+        Vue.prototype.$loading.service().close()
+        return config
+    }
+
+    )
     return instance(config)
 }

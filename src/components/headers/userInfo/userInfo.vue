@@ -32,8 +32,8 @@
   left: 80%;
   top: 80px;
   width: 200px;
-  background-color: rgba(rgb(77, 56, 102), .1);
-  box-shadow: 0 0 1px;
+  background-color: #fff;
+  box-shadow: 0 0 2px;
   
   .sanjiao {
     position: absolute;
@@ -43,11 +43,11 @@
     width: 0;
     height: 0;
     border: 10px solid transparent;
-    border-bottom-color:  rgba(rgb(77, 56, 102), .1);
+    border-bottom-color:  rgba(rgb(13, 12, 14), .1);
   }
   div {
     margin: 40px 15px;
-    color: rgb(83, 82, 82);
+    color: #000;
     font-size: 14px;
     font-weight: 600;
     

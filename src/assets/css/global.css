@@ -5,10 +5,11 @@ h1 {
 
 html {
     min-width: 1485px;
-    background-color: #F5F5F5;
+    background-color: #333;
 }
 
 .el-input.is-active .el-input__inner, .el-input__inner:focus {
     border-color: transparent;
     outline: 0;
 } 
+

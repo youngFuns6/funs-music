@@ -13,11 +13,25 @@
       "unicode_decimal": 59002
     },
     {
+      "icon_id": "4275555",
+      "name": "查看MV",
+      "font_class": "chakanMV",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
       "icon_id": "6282770",
       "name": "刷新",
       "font_class": "shuaxin",
       "unicode": "e6b9",
       "unicode_decimal": 59065
+    },
+    {
+      "icon_id": "12974270",
+      "name": "mv",
+      "font_class": "mv",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
     },
     {
       "icon_id": "19494224",
@@ -32,6 +46,13 @@
       "font_class": "shuaxin1",
       "unicode": "e692",
       "unicode_decimal": 59026
+    },
+    {
+      "icon_id": "22127584",
+      "name": "hm_video_light",
+      "font_class": "hm_video_light",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
     }
   ]
 }

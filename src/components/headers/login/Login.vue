@@ -42,7 +42,8 @@
     
 <script>
 import { getQr, statusQr, loginPh } from "../../../network/login";
-import { getCookie } from "../../../utils/cookie";
+import { getCookie, setCookie } from "../../../utils/cookie";
+import { mapMutations } from "vuex";
 
 export default {
   name: "login",
@@ -152,6 +153,9 @@ export default {
         this.getLoginInfo();
       });
     },
+    // vuex mapMutations 相关处理函数
+    ...mapMutations(["profileMutations"]),
+
     // 获取登录信息
     async getLoginInfo() {
       // 发送登录请求
@@ -164,15 +168,21 @@ export default {
       if (res.code !== 200) {
         return this.$message.error("登录失败");
       }
-      document.cookie = res.cookie;
-      // console.log(res.cookie);
-      this.$store.state.cookie = getCookie();
-      // console.log(getCookie());
+      
+      
+      // 将用户相关信息存入 vuex
+      let profile = {
+        nickName: res.profile.nickname,
+        avatarUrl: res.profile.avatarUrl,
+        userId: res.profile.userId,
+      };
+      this.profileMutations(profile);
+      // 将用户 信息 存入 sessionStorage
+      window.sessionStorage.setItem("profile", JSON.stringify(profile));
+      
 
-      this.$store.state.profile.nickName = res.profile.nickname;
-      this.$store.state.profile.avatarUrl = res.profile.avatarUrl;
-      this.$store.state.profile.userId = res.profile.userId;
-      this.$store.state.profile.backgroundUrl = res.profile.backgroundUrl;
+      // console.log(profile);
+
       this.close();
     },
 

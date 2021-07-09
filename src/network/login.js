@@ -10,19 +10,19 @@ function getQrKey() {
 // 生成二维码
 export function getQr() {
     return request({
-        url: `/login/qr/create?key=${getQrKey().then((res) => { res.data.unikey})}&qrimg=66`
+        url: `/login/qr/create?key=${getQrKey().then((res) => { res.data.unikey })}&qrimg=66`
     })
 }
 
 export function statusQr() {
     return request({
-        url: `/login/qr/check?key=${getQrKey().then((res) => { res.data.unikey})}`
+        url: `/login/qr/check?key=${getQrKey().then((res) => { res.data.unikey })}`
     })
 }
 
-export function loginPh(ph,md5_pw) {
+export function loginPh(ph, md5_pw) {
     return request({
-        
+
         url: `/login/cellphone`,
         params: {
             phone: ph,
@@ -36,6 +36,14 @@ export function loginPh(ph,md5_pw) {
 export function getUserInfo(id) {
     return request({
         url: `/user/detail?uid=${id}`,
-        
+
+    })
+}
+
+// 退出登录
+export function getQuit() {
+    return request({
+        url: `/logout`,
+
     })
 }

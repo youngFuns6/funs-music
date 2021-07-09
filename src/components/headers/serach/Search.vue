@@ -69,6 +69,7 @@ export default {
   methods: {
     // 搜索建议提示
     async cb() {
+      
       const { data: res } = await getTips(this.inputValue);
 
       //   console.log(res);
