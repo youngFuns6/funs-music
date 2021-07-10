@@ -31,7 +31,9 @@ import {
   TableColumn,
   Divider,
   Tooltip,
-  Loading
+  Loading,
+  Tag,
+  
 
 } from 'element-ui'
 
@@ -54,6 +56,8 @@ Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Divider)
 Vue.use(Tooltip)
+Vue.use(Tag)
+
 
 
 Vue.prototype.$message = Message

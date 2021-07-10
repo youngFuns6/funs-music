@@ -20,14 +20,33 @@
               <p class="singer">发行公司：{{ newSongInfoObj.album.company }}</p>
             </div>
           </div>
-          <div class="dec">
-            <p class="pro">专辑介绍</p>
-            <p ref="decRef" class="isShow" v-show="isShow">
-              {{ newSongInfoObj.album.description }}
-            </p>
-            <p ref="decRef" class="isShowE" v-show="isShowE">
-              {{ newSongInfoObj.album.description }}
-            </p>
+
+          <div class="boxDec">
+            <!-- 专辑描述1 -->
+            <div class="dec1" v-show="isShow">
+              <p class="pro">专辑介绍</p>
+              <p
+                ref="decRef"
+                class="isShowCon"
+                v-for="(item, index) in description"
+                :key="index"
+              >
+                {{ item }}
+              </p>
+            </div>
+            <!-- 专辑描述2 -->
+            <div class="dec2" v-show="isShowE">
+              <p class="pro">专辑介绍</p>
+              <p
+                ref="decRef"
+                class="isShowCon"
+                v-for="(item, index) in description"
+                :key="index"
+              >
+                {{ item }}
+              </p>
+            </div>
+            <!-- 展开收起按钮 -->
             <div class="show" @click="doShowText" v-if="showText">展开</div>
             <div class="show" @click="doShowTextE" v-else>收起</div>
           </div>
@@ -84,20 +103,43 @@
       <el-col :span="6">
         <!-- 喜欢此专辑的人 -->
         <el-card>
-
+          <div class="newSongs">关于歌手</div>
+          <div>
+            <p
+              class="singerDec"
+              v-for="(item, index) in singerDec"
+              :key="index"
+            >
+              {{ item }}
+            </p>
+          </div>
         </el-card>
+        <!-- 相似歌手推荐 -->
+
+        <el-row>
+          <el-col>
+            <el-card>
+              <div class="newSongs">相似歌手推荐</div>
+              <div class="singerTag">
+                <el-tag type="success" v-for="(item, index) in simiSingers" :key="index">
+                  <img :src="item.picUrl" >
+                  {{item.name}}
+                  </el-tag>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
   </div>
 </template>
     
 <script>
-import { getNewSongInfo, getAlbumDet } from "../../network/Sing";
-import { getAlbumComment } from "../../network/comment"; 
+import { getNewSongInfo, getAlbumDet, getSimiSinger } from "../../network/Sing";
+import { getAlbumComment } from "../../network/comment";
 import AlbumComent from "../../components/coments/AlbumComent.vue"; // 导入专辑评论组件
 
 export default {
-  components: { AlbumComent },
   name: "newSongInfo",
   data() {
     return {
@@ -105,11 +147,16 @@ export default {
       newSongInfoObj: {
         // 新碟详情描述
         album: {
-          artist: {},
+          artist: {
+            // 歌手 id
+            id: "",
+          },
         },
         // 新碟包含歌曲
         songs: [],
       },
+      // 专辑描述字符串数组
+      description: [],
 
       // 是否展开描述
       isShow: true,
@@ -136,14 +183,17 @@ export default {
       // 分页参数
       pageNum: 1,
 
-      // 新碟相关歌手 id
-      singerId: []
+      // 歌手描述信息
+      singerDec: [],
+
+      // 相似歌手推荐
+      simiSingers: [],
     };
   },
   created() {
     this.getNewSongInfoRef();
     this.getAlbumCommentRef();
-    this.getAlbumDetRef();
+    this.getSimiSingerRef();
   },
   methods: {
     // 根据对应 id 获取 新碟详情
@@ -153,14 +203,24 @@ export default {
       if (res.code !== 200) {
         return this.$message.error("获取新碟详情失败");
       }
+      // 处理专辑描述字符串 存为数组
+      this.description = res.album.description
+        .split()
+        .join()
+        .split("\n\n")
+        .join("\n")
+        .split("\n");
+      // console.log(this.description);
       this.newSongInfoObj.album = res.album;
       this.newSongInfoObj.songs = res.songs;
-      // 获取相关歌手 id
-      res.album.artists.forEach(item => {
-        this.singerId.push(item.id)
-      })
+      this.newSongInfoObj.album.artist.id = res.album.artist.id;
+      // console.log(this.newSongInfoObj.album.artist.id);
+      // // 获取相关歌手 id
+      // res.album.artists.forEach(item => {
+      //   this.singerId.push(item.id)
+      // })
       // console.log(res);
-
+      this.getAlbumDetRef();
       this.getAr();
     },
 
@@ -200,6 +260,7 @@ export default {
       this.albumComents.total = res.total;
       this.albumComents.comments = res.comments;
       this.albumComents.hotComments = res.hotComments;
+
       // console.log(res);
     },
 
@@ -216,18 +277,47 @@ export default {
       this.getAlbumCommentRef();
     },
 
-    
-
-    // 获取新碟专辑动态信息
-    async getAlbumDetRef(){
+    // 获取歌手详情
+    async getAlbumDetRef() {
       // console.log(this.$store.state.albumId)
-      const {data: res}  = await getAlbumDet(this.singerId[0]);
-      console.log(res)
-      console.log(this.singerId)
-      
-    }
+      // console.log(this.newSongInfoObj.album.artist.id);
+      const { data: res } = await getAlbumDet(
+        this.newSongInfoObj.album.artist.id
+      );
+
+      if (res.code !== 200) {
+        return this.$message.error("新歌速递获取失败");
+      }
+      // console.log(res);
+      // 分割歌手描述字符串 存入数组
+      this.singerDec = res.briefDesc.split().join().split("\n\n");
+      // console.log(this.singerDec);
+    },
+
+    // 获取相似歌手推荐
+    getSimiSingerRef() {
+      new Promise((resolve, reject) => {
+        if (this.newSongInfoObj.album.artist.id === "") {
+          this.newSongInfoObj.album.artist.id = getNewSongInfo(
+            this.$store.state.albumId
+          ).then((res) => {
+            return res.data.album.artist.id;
+          });
+          resolve(this.newSongInfoObj.album.artist.id);
+        }
+        reject();
+      })
+        .then((value) => {
+          getSimiSinger(value).then((res) => {
+            this.simiSingers = res.data.artists;
+            // console.log(this.simiSingers);
+          });
+        })
+        .catch((err) => err);
+    },
   },
-  comments: {
+
+  components: {
     AlbumComent,
   },
 };
@@ -288,47 +378,45 @@ export default {
     }
   }
 }
-.dec {
-  float: left;
+.boxDec {
   position: relative;
-  padding-bottom: 20px;
-  margin: 30px 0;
-  .pro {
-    font-weight: 600;
-    color: #000;
-    line-height: 2.5;
-  }
-  .isShowE {
-    font-weight: normal;
-    font-size: 12px;
-    text-indent: 2em;
-    word-wrap: break-word;
-    word-break: break-word;
-    white-space: normal;
-    line-height: 2;
-    color: #666;
-  }
+  margin: 50px 0 80px 0;
+}
+.dec1 {
+  box-sizing: border-box;
+  height: 110px;
+  overflow: hidden;
+}
+.pro {
+  font-weight: 600;
+  color: #000;
+  line-height: 2.5;
+}
 
-  .isShow {
-    font-weight: normal;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    height: 50px;
-    font-size: 12px;
-    color: #666;
-    line-height: 2;
-    text-indent: 2em;
-  }
+.isShowCon {
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  font-weight: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  color: #666;
+  line-height: 2;
+  text-indent: 2em;
 }
 .show {
+  // background-color: #333;
+  height: 50px;
   position: absolute;
   right: 30px;
-  bottom: -15px;
+  bottom: -80px;
   color: #0c73c2;
   cursor: pointer;
+  user-select: none;
   &:hover {
     text-decoration: underline;
   }
@@ -340,7 +428,8 @@ export default {
   border-bottom: 1px solid red;
 }
 
-.icon-hm_video_light, .icon-chakanMV{
+.icon-hm_video_light,
+.icon-chakanMV {
   font-size: 24px;
   cursor: pointer;
   &:last-child {
@@ -349,5 +438,31 @@ export default {
   &:hover {
     color: #0c73c2;
   }
+}
+
+.newSongs {
+  padding: 20px 10px;
+  font-weight: 600;
+  border-bottom: 1px solid red;
+  margin-bottom: 20px;
+}
+
+.singerDec {
+  font-size: 12px;
+  color: #666;
+  line-height: 2;
+  text-indent: 2em;
+}
+
+.singerTag .el-tag img{
+width: 20px;
+height: 20px;
+border-radius: 50%;
+vertical-align: middle;
+}
+
+.el-tag {
+  margin: 10px;
+  cursor: pointer;
 }
 </style>

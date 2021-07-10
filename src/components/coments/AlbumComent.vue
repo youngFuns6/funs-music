@@ -47,7 +47,7 @@
     
 <script>
 export default {
-  name: "albumcoment",
+  name: "AlbumComent",
   props: {
     albumComentsObj: {
       type: Object,

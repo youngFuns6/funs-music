@@ -29,11 +29,25 @@ export function getNewSongInfo(id) {
 
 }
 
-// 获取专辑动态信息
-export function getAlbumDet(id) {
+// 获取专辑歌手描述
+export function getAlbumDet(value) {
     return request({
-        url: `/artist/detail?id=${id}`,
+        url: `/artist/desc`,
+        params: {
+            id: value
+        }
        
+    })
+}
+
+// 获取相似歌手
+export function getSimiSinger(value) {
+    return request({
+        url: `/simi/artist`,
+        params: {
+            id: value
+        }
+
     })
 }
 

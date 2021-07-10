@@ -11,7 +11,7 @@ export function request(config) {
         // 请求前显示加载动画
         Vue.prototype.$loading.service({
             lock: true,
-            text: 'Loading',
+            text: '你是最帅的',
             spinner: 'el-icon-loading',
             background: 'rgba(0, 0, 0, 0.7)'
         })

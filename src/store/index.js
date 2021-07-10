@@ -8,6 +8,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    // 主页菜单导航的 index
+    activeIndex: '',
+    
     // cookie
     cookie: false,
     // 用户信息
@@ -21,6 +24,9 @@ export default new Vuex.Store({
     resSongs: [],
     // 专辑 id
     albumId: '',
+
+    // 音乐播放地址
+    musicUrl: ''
 
   },
   mutations: {

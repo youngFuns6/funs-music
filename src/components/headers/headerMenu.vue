@@ -11,11 +11,12 @@
         <!-- 菜单栏 -->
         <el-col :span="8">
           <el-menu
-            :default-active="activeIndex"
+            :default-active="this.$store.state.activeIndex"
             mode="horizontal"
             background-color="#545c64"
             text-color="#DFDFDF"
             active-text-color="#fff"
+            @select="setActiveIndex"
           >
             <el-menu-item index="1"
               ><router-link to="home" tag="div" class="link-div"
@@ -53,25 +54,29 @@
             <span>{{ nickName }}</span>
 
             <!-- 用户信息 -->
-            <user-info>
-              <template #level>
-                我的等级是：<span class="infoFont"
-                  >{{ userInfoObj.level }}级</span
-                >
-              </template>
-              <template #listenSongs>
-                已听歌曲数量：<span class="infoFont"
-                  >{{ userInfoObj.listenSongs }}首</span
-                >
-              </template>
-              <template #createDays>
-                使用天数：<span class="infoFont"
-                  >{{ userInfoObj.createDays }}天</span
-                >
-              </template>
-            </user-info>
+            <keep-alive>
+              <user-info>
+                <template #level>
+                  我的等级是：<span class="infoFont"
+                    >{{ userInfoObj.level }}级</span
+                  >
+                </template>
+                <template #listenSongs>
+                  已听歌曲数量：<span class="infoFont"
+                    >{{ userInfoObj.listenSongs }}首</span
+                  >
+                </template>
+                <template #createDays>
+                  使用天数：<span class="infoFont"
+                    >{{ userInfoObj.createDays }}天</span
+                  >
+                </template>
+              </user-info>
+            </keep-alive>
           </div>
-          <el-button type="primary" size="mini" @click="quit" v-show="isButton">退出</el-button>
+          <el-button type="primary" size="mini" @click="quit" v-show="isButton"
+            >退出</el-button
+          >
         </el-col>
       </el-row>
     </div>
@@ -102,7 +107,7 @@ export default {
   name: "headerMenu",
   data() {
     return {
-      activeIndex: "1",
+      
       isShow: false, // 登录弹框显示与隐藏
       // 是否显示登录后头像
       isAvatar: true,
@@ -123,6 +128,7 @@ export default {
 
   created() {
     this.isLogin();
+    
   },
 
   methods: {
@@ -182,6 +188,13 @@ export default {
         this.isButton = false;
       }
     },
+
+    // 改变页面 activeIndex
+    setActiveIndex(index){
+      this.$store.state.activeIndex = index;
+      // 将 activeIndex 保存至本地
+      window.sessionStorage.setItem('activeIndex', index)
+    }
   },
 
   components: {
@@ -242,6 +255,7 @@ h1 {
   margin-left: 20px;
   width: 50px;
   border-radius: 50%;
+  cursor: pointer;
   // vertical-align: middle;
 }
 .avatar span {
@@ -265,6 +279,7 @@ h1 {
   padding: 0;
   .link-div {
     padding: 0 30px;
+    user-select: none;
   }
 }
 

@@ -13,6 +13,13 @@
       "unicode_decimal": 59002
     },
     {
+      "icon_id": "1546591",
+      "name": "添加",
+      "font_class": "tianjia",
+      "unicode": "e697",
+      "unicode_decimal": 59031
+    },
+    {
       "icon_id": "4275555",
       "name": "查看MV",
       "font_class": "chakanMV",
@@ -27,11 +34,39 @@
       "unicode_decimal": 59065
     },
     {
+      "icon_id": "7761519",
+      "name": "删 除 ",
+      "font_class": "shanchu",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
       "icon_id": "12974270",
       "name": "mv",
       "font_class": "mv",
       "unicode": "e60b",
       "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "14582662",
+      "name": "箭头",
+      "font_class": "jiantou",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "15633941",
+      "name": "编辑",
+      "font_class": "bianji",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "19317150",
+      "name": "分享",
+      "font_class": "fenxiang1",
+      "unicode": "f04a",
+      "unicode_decimal": 61514
     },
     {
       "icon_id": "19494224",

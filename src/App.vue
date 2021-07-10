@@ -5,16 +5,26 @@
 </template>
 
 <script>
+
 export default {
-  // 页面重构前获取本地保存的信息
   created() {
+    // 页面重构前获取本地保存的信息
     this.$store.state.albumId = JSON.parse(
       window.sessionStorage.getItem("albumId")
     );
-    
+
     this.$store.state.profile = JSON.parse(
       window.sessionStorage.getItem("profile")
     );
+
+    if (window.sessionStorage.getItem("activeIndex") === null) {
+      this.$store.state.activeIndex = "1";
+    } else {
+      this.$store.state.activeIndex =
+        window.sessionStorage.getItem("activeIndex");
+    }
+
+   
   },
 };
 </script>
