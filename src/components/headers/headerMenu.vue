@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <div class="container">
       <el-row>
         <!-- logo -->
@@ -18,27 +18,27 @@
             active-text-color="#fff"
             @select="setActiveIndex"
           >
-            <el-menu-item index="1"
+            <el-menu-item index="/home"
               ><router-link to="home" tag="div" class="link-div"
                 >发现音乐</router-link
               ></el-menu-item
             >
-            <el-menu-item index="2"
+            <el-menu-item index="/mymusic"
               ><router-link to="/mymusic" tag="div" class="link-div"
                 >我的音乐</router-link
               ></el-menu-item
             >
-            <el-menu-item index="3"
+            <el-menu-item index="/singer"
               ><router-link to="/singer" tag="div" class="link-div"
                 >歌手</router-link
               ></el-menu-item
             >
-            <el-menu-item index="4"
+            <el-menu-item index="/singlist"
               ><router-link to="/singlist" tag="div" class="link-div"
                 >歌单</router-link
               ></el-menu-item
             >
-            <el-menu-item index="5"
+            <el-menu-item index="/mv"
               ><router-link to="/mv" tag="div" class="link-div"
                 >MV</router-link
               ></el-menu-item
@@ -50,7 +50,7 @@
           <search></search>
           <div class="login" @click="login" v-if="isAvatar">登录</div>
           <div class="avatar" v-else @mouseover="showUserInfo">
-            <img :src="avatarUrl" alt="" srcset="" />
+            <img :src="avatarUrl" alt="" />
             <span>{{ nickName }}</span>
 
             <!-- 用户信息 -->
@@ -91,6 +91,7 @@
       ref="loginRef"
       :ctrIsShow="isShow"
       @ctrClose="ctrClosed"
+      @ctrLoginBtn="ctrLogin"
     ></login-dialog>
   </div>
 </template>
@@ -107,7 +108,6 @@ export default {
   name: "headerMenu",
   data() {
     return {
-      
       isShow: false, // 登录弹框显示与隐藏
       // 是否显示登录后头像
       isAvatar: true,
@@ -128,7 +128,6 @@ export default {
 
   created() {
     this.isLogin();
-    
   },
 
   methods: {
@@ -150,14 +149,19 @@ export default {
       this.isShow = true;
       // console.log(this.isShow)
     },
-    ctrClosed(v) {
-      this.isShow = v; // 将子组件传的值重新赋给父组件的 isShow
+    ctrClosed() {
+      this.isShow = false; // 将子组件传的值重新赋给父组件的 isShow
       // console.log(v)
-      this.isAvatar = false;
-      this.isButton = true;
+      this.isAvatar = true;
+      this.isButton = false;
       this.avatarUrl = this.$store.state.profile.avatarUrl;
       this.nickName = this.$store.state.profile.nickName;
       // console.log(this.$store.state.profile.nickName);
+    },
+    ctrLogin() {
+      this.isShow = false;
+      this.isAvatar = false;
+      this.isButton = true;
     },
 
     // 鼠标经过展示用户信息下拉框
@@ -182,19 +186,20 @@ export default {
         this.$message.info("已退出登录");
         // 退出登录 清空状态及本地数据
         this.isAvatar = true;
+        this.isButton = false;
+        
         window.sessionStorage.removeItem("profile");
         // console.log(window.sessionStorage.getItem("profile"));
         removeCookie("__remember_me");
-        this.isButton = false;
       }
     },
 
     // 改变页面 activeIndex
-    setActiveIndex(index){
+    setActiveIndex(index) {
       this.$store.state.activeIndex = index;
       // 将 activeIndex 保存至本地
-      window.sessionStorage.setItem('activeIndex', index)
-    }
+      window.sessionStorage.setItem("activeIndex", index);
+    },
   },
 
   components: {
@@ -294,4 +299,6 @@ h1 {
 .el-button {
   margin-left: 20px;
 }
+
+
 </style>

@@ -18,7 +18,7 @@ export default {
     );
 
     if (window.sessionStorage.getItem("activeIndex") === null) {
-      this.$store.state.activeIndex = "1";
+      this.$store.state.activeIndex = "/home";
     } else {
       this.$store.state.activeIndex =
         window.sessionStorage.getItem("activeIndex");

@@ -73,10 +73,25 @@
                 </template>
               </el-table-column>
 
-              <el-table-column prop="name" label="歌曲" width="260">
+              <el-table-column label="歌曲" width="260">
+                <template #default="scope">
+                  <span class="row_po">{{ scope.row.name }}</span>
+                </template>
               </el-table-column>
 
-              <el-table-column prop="ar" label="歌手"> </el-table-column>
+              <el-table-column label="歌手">
+                <template #default="scope">
+                  <span
+                    class="row_po"
+                    v-for="(item, index) in scope.row.ar"
+                    :key="item.id"
+                    >{{ item.name
+                    }}<i v-if="index === scope.row.ar.length - 1 ? 0 : 1"
+                      >/</i
+                    ></span
+                  >
+                </template>
+              </el-table-column>
 
               <el-table-column prop="dt" label="时长" width="100">
                 <template #default="scope">
@@ -101,7 +116,7 @@
         </el-card>
       </el-col>
       <el-col :span="6">
-        <!-- 喜欢此专辑的人 -->
+        <!-- 关于歌手 -->
         <el-card>
           <div class="newSongs">关于歌手</div>
           <div>
@@ -121,10 +136,14 @@
             <el-card>
               <div class="newSongs">相似歌手推荐</div>
               <div class="singerTag">
-                <el-tag type="success" v-for="(item, index) in simiSingers" :key="index">
-                  <img :src="item.picUrl" >
-                  {{item.name}}
-                  </el-tag>
+                <el-tag
+                  type="success"
+                  v-for="(item, index) in simiSingers"
+                  :key="index"
+                >
+                  <img :src="item.picUrl" />
+                  {{ item.name }}
+                </el-tag>
               </div>
             </el-card>
           </el-col>
@@ -176,8 +195,8 @@ export default {
       albumComents: {
         // 评论数量
         total: 0,
-        comments: {},
-        hotComments: {},
+        comments: [],
+        hotComments: [],
       },
 
       // 分页参数
@@ -221,7 +240,7 @@ export default {
       // })
       // console.log(res);
       this.getAlbumDetRef();
-      this.getAr();
+      // this.getAr();
     },
 
     // 展开文字事件监听
@@ -236,20 +255,18 @@ export default {
       this.showText = true;
     },
 
-    // 处理原有数据 获取每首歌的所有歌手
-    getAr() {
-      // console.log(this.newSongInfoObj.songs);
-      this.newSongInfoObj.songs.forEach((item) => {
-        let ar = "";
-        // 遍历 ar 数组后 转换成字符串返回
-        item.ar.forEach((arItem) => {
-          ar = arItem.name + "/" + ar;
-          ar = ar.slice(0, ar.length - 1);
-        });
-        item.ar = ar;
-        ar = "";
-      });
-    },
+    // // 处理原有数据 获取每首歌的所有歌手
+    // getAr() {
+    //   // console.log(this.newSongInfoObj.songs);
+    //   this.newSongInfoObj.songs.forEach((item) => {
+    //     let arName = "";
+    //     item.ar.forEach((arItem) => {
+    //       arName = arName + arItem.name + "/";
+    //     });
+
+    //     item.arName = arName.slice(0, arName.length - 1);
+    //   });
+    // },
 
     // 获取专辑评论
     async getAlbumCommentRef() {
@@ -340,7 +357,7 @@ export default {
   width: 177px;
   height: 177px;
   float: left;
-  background-color: #666;
+  background-color: #000;
   img {
     width: 100%;
     height: 100%;
@@ -368,7 +385,7 @@ export default {
   }
   .singer {
     font-size: 14px;
-    color: #666;
+    color: #000;
     a {
       text-decoration: none;
       color: #0c73c2;
@@ -378,6 +395,15 @@ export default {
     }
   }
 }
+
+.row_po {
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+    color: #0c73c2;
+  }
+}
+
 .boxDec {
   position: relative;
   margin: 50px 0 80px 0;
@@ -404,7 +430,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 12px;
-  color: #666;
+  color: #000;
   line-height: 2;
   text-indent: 2em;
 }
@@ -449,16 +475,16 @@ export default {
 
 .singerDec {
   font-size: 12px;
-  color: #666;
+  color: #000;
   line-height: 2;
   text-indent: 2em;
 }
 
-.singerTag .el-tag img{
-width: 20px;
-height: 20px;
-border-radius: 50%;
-vertical-align: middle;
+.singerTag .el-tag img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  vertical-align: middle;
 }
 
 .el-tag {

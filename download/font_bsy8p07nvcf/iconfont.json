@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "398173",
+      "name": "音乐",
+      "font_class": "yinle",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
       "icon_id": "1186829",
       "name": "二维码",
       "font_class": "erweima",
@@ -34,6 +41,20 @@
       "unicode_decimal": 59065
     },
     {
+      "icon_id": "6501177",
+      "name": "个人",
+      "font_class": "icon--my",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "6536724",
+      "name": "信息",
+      "font_class": "xinxi",
+      "unicode": "e65e",
+      "unicode_decimal": 58974
+    },
+    {
       "icon_id": "7761519",
       "name": "删 除 ",
       "font_class": "shanchu",
@@ -48,6 +69,13 @@
       "unicode_decimal": 58891
     },
     {
+      "icon_id": "14055590",
+      "name": "下载",
+      "font_class": "xiazai",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
       "icon_id": "14582662",
       "name": "箭头",
       "font_class": "jiantou",
@@ -60,6 +88,13 @@
       "font_class": "bianji",
       "unicode": "e629",
       "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "16376873",
+      "name": "分类",
+      "font_class": "biaoqianA01_fenlei-02",
+      "unicode": "ea8b",
+      "unicode_decimal": 60043
     },
     {
       "icon_id": "19317150",
@@ -81,6 +116,13 @@
       "font_class": "shuaxin1",
       "unicode": "e692",
       "unicode_decimal": 59026
+    },
+    {
+      "icon_id": "21196231",
+      "name": "播放",
+      "font_class": "bofang",
+      "unicode": "e668",
+      "unicode_decimal": 58984
     },
     {
       "icon_id": "22127584",

@@ -98,7 +98,7 @@ export default {
     // 点击 × 关闭登录框事件
     close() {
       this.isShow = false;
-      this.$emit("ctrClose", this.isShow); // 通过自定义事件向父组件传值
+      this.$emit("ctrClose"); // 通过自定义事件向父组件传值
       this.isShow = this.ctrIsShow; // 关闭的同时将 isShow 重新赋值
       // console.log(this.isShow)
       // 登录框关闭重置表单并移除验证
@@ -168,8 +168,7 @@ export default {
       if (res.code !== 200) {
         return this.$message.error("登录失败");
       }
-      
-      
+
       // 将用户相关信息存入 vuex
       let profile = {
         nickName: res.profile.nickname,
@@ -179,11 +178,11 @@ export default {
       this.profileMutations(profile);
       // 将用户 信息 存入 sessionStorage
       window.sessionStorage.setItem("profile", JSON.stringify(profile));
-      
 
       // console.log(profile);
-
-      this.close();
+      this.isShow = false;
+      this.$emit("ctrLoginBtn");
+      this.isShow = this.ctrIsShow;
     },
 
     // 登录框拖拽效果

@@ -51,6 +51,18 @@ export function getSimiSinger(value) {
     })
 }
 
+// 获取歌单详情 不完整
+export function getPlaylistDet(value) {
+    return request({
+        url: `/playlist/detail`,
+        params: {
+            id: value
+        }
+
+    })
+}
+
+
 // 获取音乐 url
 export function getSongUrl(id) {
     return request({

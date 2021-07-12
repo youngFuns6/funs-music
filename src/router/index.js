@@ -9,6 +9,7 @@ import Mv from '../views/home/Mv.vue'
 import newSongInfo from '../views/homeChildren/newSongInfo.vue'
 
 
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -25,10 +26,12 @@ const routes = [
         path: '/newSongInfo', component: newSongInfo
       },
       {
-        path: '/mymusic', component: MyMusic
+        path: '/mymusic', component: MyMusic,
+        
       },
       {
         path: '/singer', component: Singer
+        
       },
       {
         path: '/singlist', component: SingList

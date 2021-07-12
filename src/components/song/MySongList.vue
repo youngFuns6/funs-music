@@ -16,23 +16,27 @@
             <li
               v-for="item in songListObjAttr.createSongList"
               :key="item.id"
-              @mouseenter="showListIcon(item.id, item.userId)"
-              @mouseleave="hideListIcon(item.id, item.userId)"
+              @mouseenter="showListIcon(item, item.userId)"
+              @mouseleave="hideListIcon(item, item.userId)"
+              @click="getListDet(item)"
             >
               <span class="create-img">
                 <img :src="item.coverImgUrl" alt="" />
               </span>
-              <span class="create-dec">
+              <div class="create-dec">
                 <p class="name">{{ item.name }}</p>
                 <p class="count">{{ item.trackCount }}首</p>
                 <p class="time" :id="'b' + item.id">
-                  创建时间：{{ item.createTime | dataFormate }}
+                  {{ item.createTime | dataFormate }}
                 </p>
                 <p class="opt" :id="'a' + item.id">
-                  <span class="iconfont icon-bianji"></span>
+                  <span
+                    class="iconfont icon-bianji"
+                    @click.stop="editPlaylistFun(item.id)"
+                  ></span>
                   <span class="iconfont icon-shanchu"></span>
                 </p>
-              </span>
+              </div>
             </li>
           </ul>
         </div>
@@ -51,21 +55,23 @@
             <li
               v-for="item in songListObjAttr.collectionSongList"
               :key="item.id"
-              @mouseenter="showListIcon(item.id, item.userId)"
-              @mouseleave="hideListIcon(item.id, item.userId)"
+              @mouseenter="showListIcon(item, item.userId)"
+              @mouseleave="hideListIcon(item, item.userId)"
+              @click="getListDet(item)"
             >
               <span class="collection-img">
                 <img :src="item.coverImgUrl" alt="" />
               </span>
-              <span class="collection-dec">
+              <div class="collection-dec">
                 <p class="name">{{ item.name }}</p>
                 <p class="count">
-                  {{ item.trackCount }}首 by {{ item.creator.nickname }}
+                  {{ item.trackCount }}首 by
+                  <span>{{ item.creator.nickname }}</span>
                 </p>
                 <p class="opt" :id="'a' + item.id">
                   <span class="iconfont icon-shanchu"></span>
                 </p>
-              </span>
+              </div>
             </li>
           </ul>
         </div>
@@ -75,6 +81,7 @@
 </template>
     
 <script>
+
 export default {
   name: "MySongList",
   props: {
@@ -94,25 +101,27 @@ export default {
   },
   methods: {
     // 鼠标经过左侧列表 展示 icon
-    showListIcon(id, userId) {
-      //   console.log(e.target.lastChild);
-      // e.target.lastChild.style.display = 'none '
-      // console.log(document.querySelector(`#a${id}`));
-
+    showListIcon(item, userId) {
       if (this.$store.state.profile.userId === userId) {
-        document.querySelector(`#a${id}`).style.display = "block";
-        document.querySelector(`#b${id}`).style.display = "none";
+        // 判断是否为 我喜欢的音乐 歌单 是则隐藏该 icon 节点
+        if (item.name === `${this.$store.state.profile.nickName}喜欢的音乐`) {
+          // console.log("111");
+          document.querySelector(`#a${item.id}`).style.display = "none";
+        } else {
+          document.querySelector(`#a${item.id}`).style.display = "block";
+          document.querySelector(`#b${item.id}`).style.display = "none";
+        }
       } else {
-        document.querySelector(`#a${id}`).style.display = "block";
+        document.querySelector(`#a${item.id}`).style.display = "block";
       }
     },
     // 鼠标离开左侧列表 隐藏 icon
-    hideListIcon(id, userId) {
+    hideListIcon(item, userId) {
       if (this.$store.state.profile.userId === userId) {
-        document.querySelector(`#a${id}`).style.display = "none";
-        document.querySelector(`#b${id}`).style.display = "block";
+        document.querySelector(`#a${item.id}`).style.display = "none";
+        document.querySelector(`#b${item.id}`).style.display = "block";
       } else {
-        document.querySelector(`#a${id}`).style.display = "none";
+        document.querySelector(`#a${item.id}`).style.display = "none";
       }
     },
 
@@ -143,19 +152,21 @@ export default {
         this.isShowCollection = true;
       }
     },
-    // 点击歌单列表事件
-    //   clickSong(id){
-    //       console.log(document.querySelector(`li[key='${id}']`))
-    //   }
+    // 点击歌单列表获取歌单详情
+    getListDet(item) {
+      // console.log("666");
+      this.$emit("sendPlaylistId", item);
+      // console.log(document.querySelector(`li[key='${id}']`));
+    },
+    
   },
 };
 </script>
     
 <style lang='less' scoped>
-
-
 h4 {
   margin: 20px 0;
+  // background-color: #fff;
 }
 .create .icon-jiantou {
   color: #ccc;
@@ -194,6 +205,11 @@ h4 {
   overflow: hidden;
 }
 
+.collection-dec,
+.create-dec {
+  float: left;
+}
+
 .create-img,
 .collection-img {
   float: left;
@@ -212,7 +228,7 @@ h4 {
   font-size: 14px;
   cursor: pointer;
   &:hover {
-    background-color: #f8f8f8;
+    background-color: #999;
   }
 
   p {
@@ -223,6 +239,7 @@ h4 {
   }
 
   .name {
+    width: 180px;
     float: left;
     margin-left: 10px;
   }
@@ -231,14 +248,22 @@ h4 {
     position: absolute;
     left: 60px;
     bottom: 10px;
-    color: #ccc;
+    width: 180px;
+    color: #303133;
+    span {
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+        color: #eee;
+      }
+    }
   }
   .time,
   .opt {
     position: absolute;
     right: 20px;
     bottom: 10px;
-    color: #ccc;
+    color: #303133;
     span {
       margin: 0 10px;
     }
@@ -265,6 +290,7 @@ h4 {
   display: inline-block;
   transform: rotateZ(90deg);
 }
+
 .mask {
   height: 70px;
 }

@@ -14,11 +14,22 @@
             <a href="#">{{ item.user.nickname }}</a
             >：
             <span>{{ item.content }}</span>
+            <p class="rp">{{ item.time | dataFormate }}</p>
           </div>
-
-          <p class="rp">{{ item.time | dataFormate }}</p>
-          <div class="gl"></div>
-          <el-divider></el-divider>
+          <div class="beReplied">
+            <div
+              class="beReplied_pl"
+              v-for="(item, index) in item.beReplied"
+              :key="index"
+            >
+              <span
+                ><img :src="item.user.avatarUrl" alt="" />
+                <i>{{ item.user.nickname }}</i>：</span
+              >
+              <span>{{ item.content }}</span>
+            </div>
+            <el-divider class="line"></el-divider>
+          </div>
         </li>
       </ul>
       <div>
@@ -33,11 +44,23 @@
               <a href="#">{{ item.user.nickname }}</a
               >：
               <span>{{ item.content }}</span>
+              <p class="rp">{{ item.time | dataFormate }}</p>
             </div>
 
-            <p class="rp">{{ item.time | dataFormate }}</p>
-            <div class="gl"></div>
-            <el-divider></el-divider>
+            <div class="beReplied">
+              <div
+                class="beReplied_pl"
+                v-for="(item, index) in item.beReplied"
+                :key="index"
+              >
+                <span
+                  ><img :src="item.user.avatarUrl" alt="" />
+                  <i>{{ item.user.nickname }}</i> ：</span
+                >
+                <span>{{ item.content }}</span>
+              </div>
+              <el-divider class="line"></el-divider>
+            </div>
           </li>
         </ul>
       </div>
@@ -90,6 +113,7 @@ export default {
     height: 20px;
   }
   .info {
+    position: relative;
     padding-top: 2px;
   }
   &::after {
@@ -116,7 +140,7 @@ export default {
 .rp {
   position: absolute;
   left: 60px;
-  bottom: 40px;
+  bottom: -30px;
   font-size: 12px;
   color: #666;
 }
@@ -129,6 +153,30 @@ export default {
   }
 }
 
-
-
+.beReplied {
+  position: relative;
+  margin-top: 50px;
+  margin-left: 60px;
+  img {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    vertical-align: middle;
+    cursor: pointer;
+  }
+  .beReplied_pl {
+    background-color: #545c64;
+    padding: 10px 20px;
+    span i {
+      color: #0c73c2;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+    }
+  }
+}
+// .line {
+//   position: absolute;
+// }
 </style>

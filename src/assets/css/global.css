@@ -13,3 +13,12 @@ html {
     outline: 0;
 } 
 
+.el-card {
+background-color: #545C64;
+}
+.clearfix::after {
+    content: '';
+    clear: both;
+    display: block;
+    overflow: hidden;
+}
