@@ -93,7 +93,7 @@ span {
 }
 .tip a {
   text-decoration-line: none;
-  color: #666;
+  color: #000;
   font-size: 16px;
   cursor: pointer;
 }

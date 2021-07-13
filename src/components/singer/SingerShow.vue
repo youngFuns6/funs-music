@@ -9,25 +9,23 @@
         </div>
         <slot name="query"></slot>
         <!-- 内容 -->
-        <div class="kk">
-          <ul
-            class="content infinite-list"
-            v-infinite-scroll="load"
-            style="overflow: auto"
-            :infinite-scroll-immediate='false'
-          >
-            <li v-for="item in ListInfoAttr" :key="item.id" class="infinite-list-item">
-              <div class="cover">
-                <a href="#" class="mask"></a>
-                <img :src="item.img1v1Url" alt="" />
-              </div>
+        <div>
+          <div>
+            <ul class="content">
+              <li v-for="item in ListInfoAttr" :key="item.id">
+                <div class="cover">
+                  <a href="#" class="mask"></a>
+                  <img :src="item.img1v1Url" alt="" />
+                </div>
 
-              <p class="clearfix">
-                <a href="#">{{ item.name }}</a>
-                <a href="#" class="iconfont icon-icon--my"></a>
-              </p>
-            </li>
-          </ul>
+                <p class="clearfix">
+                  <a href="#">{{ item.name }}</a>
+                  <a href="#" class="iconfont icon-icon--my"></a>
+                </p>
+              </li>
+            </ul>
+           
+          </div>
         </div>
       </div>
     </el-card>
@@ -35,7 +33,7 @@
 </template>
     
 <script>
-import { getHotSinger, getSingerType } from "../../network/singer"; // 热门歌手 歌手分类 网络请求
+
 export default {
   name: "SingerShow",
   props: {
@@ -48,19 +46,16 @@ export default {
   },
   data() {
     return {
-      
+      loading: false,
     };
   },
-  created() {
-      
+  destroyed(){
+    this.$emit('clearListInfo')
   },
-  methods: {
-    // 无限滚动
-    load() {
-        this.$emit('emitLoad')
-        console.log('66')
-    },
-  },
+ 
+  methods: {},
+  
+  computed: {},
 };
 </script>
     
@@ -124,6 +119,6 @@ export default {
 }
 
 .kk {
-    height: 100%;
+  height: 100%;
 }
 </style>

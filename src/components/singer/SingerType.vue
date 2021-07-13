@@ -3,9 +3,7 @@
     <el-card>
       <div>
         <p>热门歌手</p>
-        <ul
-          
-        >
+        <ul>
           <li @click="clickHotSinger">
             <span class="iconfont icon-biaoqianA01_fenlei-02"></span>
             <span>热门歌手</span>
@@ -18,7 +16,7 @@
           <li
             v-for="(item2, index2) in item1.singerTypeInfo"
             :key="index2"
-            @click="getSinger(item1.area, item2.type)"
+            @click="getSinger(item1.area, item2.type, item2.name)"
           >
             <span class="iconfont icon-biaoqianA01_fenlei-02"></span>
             <span>{{ item2.name }}</span>
@@ -32,23 +30,22 @@
 <script>
 import singerTypeValue from "../../utils/singerTypeInfo"; // 导入歌手分类数据
 
-
 export default {
   name: "singerType",
   data() {
     return {
-       
       // 歌手分类数据对象
       singerTypeValue,
     };
   },
   methods: {
-      
     async clickHotSinger() {
-        // console.log('777')
-        this.$emit('emitHotSinger')
+      // console.log('777')
+      this.$emit("emitHotSinger");
     },
-    getSinger() {},
+    getSinger(area, type, title) {
+      this.$emit("emitGetSinger", area, type, title);
+    },
   },
 };
 </script>

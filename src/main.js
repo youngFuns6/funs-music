@@ -33,7 +33,8 @@ import {
   Tooltip,
   Loading,
   Tag,
-  InfiniteScroll,
+ 
+
 
 
 } from 'element-ui'
@@ -58,7 +59,8 @@ Vue.use(TableColumn)
 Vue.use(Divider)
 Vue.use(Tooltip)
 Vue.use(Tag)
-Vue.use(InfiniteScroll)
+
+
 
 
 
