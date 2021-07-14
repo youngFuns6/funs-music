@@ -19,6 +19,7 @@
             @select="setActiveIndex"
           >
             <el-menu-item index="/home"
+            
               ><router-link to="home" tag="div" class="link-div"
                 >发现音乐</router-link
               ></el-menu-item
@@ -135,7 +136,7 @@ export default {
     isLogin() {
       // console.log(this.$store.state.profile == null);
       if (this.$store.state.profile === null) {
-        this.$store.state.profile = {};
+        return
       } else {
         this.isAvatar = false;
         this.isButton = true;
@@ -147,6 +148,7 @@ export default {
 
     login() {
       this.isShow = true;
+     
       // console.log(this.isShow)
     },
     ctrClosed() {
@@ -162,6 +164,8 @@ export default {
       this.isShow = false;
       this.isAvatar = false;
       this.isButton = true;
+      this.avatarUrl = this.$store.state.profile.avatarUrl;
+      this.nickName = this.$store.state.profile.nickName;
     },
 
     // 鼠标经过展示用户信息下拉框
@@ -196,6 +200,7 @@ export default {
 
     // 改变页面 activeIndex
     setActiveIndex(index) {
+      
       this.$store.state.activeIndex = index;
       // 将 activeIndex 保存至本地
       window.sessionStorage.setItem("activeIndex", index);

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { getCookie } from '../utils/cookie'
+
 
 
 
@@ -24,6 +24,8 @@ export default new Vuex.Store({
     resSongs: [],
     // 专辑 id
     albumId: '',
+    // 歌单 id
+    playListId: '',
 
     // 音乐播放地址
     musicUrl: ''
@@ -43,6 +45,10 @@ export default new Vuex.Store({
     // 新碟 id 处理函数
     albumIdMutations(state, id) {
       state.albumId = id
+    },
+    // 歌单 id 处理函数
+    playListIdMutations(state, id) {
+      state.playListId = id
     }
 
   },

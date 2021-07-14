@@ -23,7 +23,7 @@ export function getNewSong(info) {
 export function getNewSongInfo(id) {
     return request({
         url: '/album',
-        params: {id}
+        params: { id }
 
     })
 
@@ -36,7 +36,7 @@ export function getAlbumDet(value) {
         params: {
             id: value
         }
-       
+
     })
 }
 
@@ -62,12 +62,28 @@ export function getPlaylistDet(value) {
     })
 }
 
+// 获取歌单分类
+export function getPlaylistCat() {
+    return request({
+        url: `/playlist/catlist`,
+
+    })
+}
+
+// 获取歌单（网友精选单）
+export function getPlaylistTop(queryInfo) {
+    return request({
+        url: `/top/playlist`,
+        params: queryInfo
+    })
+}
+
 
 // 获取音乐 url
 export function getSongUrl(id) {
     return request({
         url: '/song/url',
-        params: {id}
+        params: { id }
 
     })
 

@@ -62,6 +62,13 @@
       "unicode_decimal": 58898
     },
     {
+      "icon_id": "11405795",
+      "name": "听歌",
+      "font_class": "icon-test",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
       "icon_id": "12974270",
       "name": "mv",
       "font_class": "mv",

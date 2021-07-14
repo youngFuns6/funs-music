@@ -33,6 +33,7 @@ import {
   Tooltip,
   Loading,
   Tag,
+  
  
 
 
@@ -64,6 +65,7 @@ Vue.use(Tag)
 
 
 
+
 Vue.prototype.$message = Message
 Vue.prototype.$loading = Loading
 
@@ -88,6 +90,16 @@ Vue.filter('secondFormate', function (s) {
   }
 
 })
+
+// 播放数超万过滤器
+Vue.filter('counFormate', function (count) {
+  if (count < 10000) {
+    return (count / 10000).toFixed(2)
+  }
+  return `${Math.ceil(count / 10000)}万`
+})
+
+
 
 Vue.config.productionTip = false
 

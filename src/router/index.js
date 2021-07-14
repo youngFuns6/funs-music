@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '../store'
 import headerMenu from '../components/headers/headerMenu'
 import MyMusic from '../views/home/MyMusic.vue'
 import Home from '../views/home/Home.vue'
@@ -7,6 +8,7 @@ import Singer from '../views/home/Singer.vue'
 import SingList from '../views/home/SingList.vue'
 import Mv from '../views/home/Mv.vue'
 import newSongInfo from '../views/homeChildren/newSongInfo.vue'
+import SingListDet from '../views/singListChildren/SingListDet.vue'
 
 
 
@@ -20,22 +22,24 @@ const routes = [
     path: '/home', component: headerMenu,
     children: [
       {
-        path: '/home', component: Home
+        path: '/home', component: Home,
+
       },
       {
         path: '/newSongInfo', component: newSongInfo
       },
       {
         path: '/mymusic', component: MyMusic,
-        
+
       },
       {
         path: '/singer', component: Singer
-        
+
       },
       {
-        path: '/singlist', component: SingList
+        path: '/singlist', component: SingList,
       },
+      { path: '/singlist/detail', component: SingListDet },
       {
         path: '/mv', component: Mv
       }
@@ -49,6 +53,20 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+
+
+// 未登陆验证 阻止跳转到我的音乐
+router.beforeEach((to, from, next) => {
+  // to and from are both route objects. must call `next`.
+  if (to.path === '/mymusic' && window.sessionStorage.getItem('profile') === null) {
+    next('/home')
+    store.state.activeIndex = '/home'
+    Vue.prototype.$message.error('请先登陆后刷新')
+
+  }
+  next()
 })
 
 export default router

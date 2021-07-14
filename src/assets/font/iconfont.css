@@ -1,6 +1,6 @@
 @font-face {
   font-family: "iconfont"; /* Project id  */
-  src: url('iconfont.ttf?t=1626086464328') format('truetype');
+  src: url('iconfont.ttf?t=1626265681005') format('truetype');
 }
 
 .iconfont {
@@ -41,6 +41,10 @@
 
 .icon-shanchu:before {
   content: "\e612";
+}
+
+.icon-icon-test:before {
+  content: "\e619";
 }
 
 .icon-mv:before {

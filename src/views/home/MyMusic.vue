@@ -91,7 +91,7 @@ export default {
     async getMyMusicRef() {
       const { data: res } = await getMyMusic(this.$store.state.profile.userId);
       // console.log(res);
-      if (res.code !== 200) {
+      if (res.code !== 200 && this.$store.state.profile.userId !== '') {
         return this.$message.error("请求失败");
       }
       // 循环判断是创建的歌单还是收藏的歌单 push 到不同数组

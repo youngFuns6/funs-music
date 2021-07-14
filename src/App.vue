@@ -13,6 +13,10 @@ export default {
       window.sessionStorage.getItem("albumId")
     );
 
+    this.$store.state.playListId = JSON.parse(
+      window.sessionStorage.getItem("playListId")
+    );
+
     this.$store.state.profile = JSON.parse(
       window.sessionStorage.getItem("profile")
     );
