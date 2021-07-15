@@ -141,9 +141,15 @@ export default {
     // 获取歌单评论
     async getPlayCommentFun() {
       const { data: res } = await getPlayComment(this.queryInfo);
-      console.log(res);
+      // console.log(res);
+      if(res.code !== 200){
+        return this.$message.error('获取评论失败')
+      }
       this.playListComments = res;
-      
+      // 超 5000 评论 获取下一页数据
+      if(this.total > 5000){
+        this.queryInfo.before = res.comments[res.comments.length - 1].time
+      }
     },
 
     // 页面评论数量改变事件

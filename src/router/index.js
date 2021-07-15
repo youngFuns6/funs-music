@@ -9,6 +9,7 @@ import SingList from '../views/home/SingList.vue'
 import Mv from '../views/home/Mv.vue'
 import newSongInfo from '../views/homeChildren/newSongInfo.vue'
 import SingListDet from '../views/singListChildren/SingListDet.vue'
+import SingerDet from '../components/singer/SingerDet.vue'
 
 
 
@@ -40,6 +41,7 @@ const routes = [
         path: '/singlist', component: SingList,
       },
       { path: '/singlist/detail', component: SingListDet },
+      {path: '/singer/detail', component: SingerDet},
       {
         path: '/mv', component: Mv
       }

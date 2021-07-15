@@ -20,6 +20,7 @@
                 class="small_cat"
                 v-for="(item, index) in subObj[keyValue]"
                 :key="index"
+                @click="queryCat(item)"
               >
                 <span>{{ item }}</span>
                 <span>{{index === subObj[keyValue].length - 1 ? '' : '|'}}</span>
@@ -77,10 +78,14 @@ export default {
         this.subHandle();
       }
     },
+    // 查询全部
     queryAll() {
-      // console.log(this.subObj);
-      // console.log(Object.keys(this.categoriesAttr).length);
+      this.$emit('emitQueryAll')
     },
+    // 分类查询
+    queryCat(item){
+      this.$emit('emitQueryCat',item)
+    }
   },
   computed: {},
 };
@@ -100,9 +105,10 @@ position: relative;
   border-bottom: 10px solid #fff;
 }
 .cat_box {
-  background-color: #F2E6DF;
+  background-color: rgba(white, .8);
   box-shadow: 0 0 10px #333;
   width: 700px;
+  border-radius: 5px;
   .cat_h {
     border-bottom: 1px solid #666;
    

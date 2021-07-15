@@ -24,6 +24,9 @@ export default new Vuex.Store({
     resSongs: [],
     // 专辑 id
     albumId: '',
+
+    // 歌手 id
+    singerId: '',
     // 歌单 id
     playListId: '',
 
@@ -46,6 +49,12 @@ export default new Vuex.Store({
     albumIdMutations(state, id) {
       state.albumId = id
     },
+
+    // 歌手 id 处理函数
+    singerIdMutations(state, id) {
+      state.singerId = id
+    },
+
     // 歌单 id 处理函数
     playListIdMutations(state, id) {
       state.playListId = id

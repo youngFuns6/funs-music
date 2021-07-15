@@ -33,6 +33,8 @@ import {
   Tooltip,
   Loading,
   Tag,
+  Tabs,
+  TabPane,
   
  
 
@@ -60,6 +62,8 @@ Vue.use(TableColumn)
 Vue.use(Divider)
 Vue.use(Tooltip)
 Vue.use(Tag)
+Vue.use(Tabs)
+Vue.use(TabPane)
 
 
 

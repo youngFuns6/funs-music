@@ -12,9 +12,8 @@
         <div>
           <div>
             <ul class="content">
-              <li v-for="item in ListInfoAttr" :key="item.id">
+              <li v-for="item in ListInfoAttr" :key="item.id" @click.prevent="saveSingerId(item.id)">
                 <div class="cover">
-                  <a href="#" class="mask"></a>
                   <img :src="item.img1v1Url" alt="" />
                 </div>
 
@@ -33,10 +32,11 @@
 </template>
     
 <script>
-
+import {mapMutations} from 'vuex'
 export default {
   name: "SingerShow",
   props: {
+    // 分类 相应歌手列表
     ListInfoAttr: {
       type: Array,
       default() {
@@ -46,14 +46,23 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      
     };
   },
-  destroyed(){
-    this.$emit('clearListInfo')
-  },
  
-  methods: {},
+ 
+  methods: {
+    // vuex 歌手 id 处理函数
+    ...mapMutations(['singerIdMutations']),
+    // 点击歌手存储歌手 id
+    saveSingerId(id){
+      this.singerIdMutations(id)
+      // console.log(this.$store.state.singerId)
+      // 将歌手 id 存储到本地
+      window.sessionStorage.setItem('singerId',JSON.stringify(id))
+      this.$router.push('/singer/detail')
+    }
+  },
   
   computed: {},
 };
@@ -91,17 +100,12 @@ export default {
     width: 130px;
     height: 130px;
   }
-  .mask {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 130px;
-    height: 130px;
-  }
+ 
 
   img {
     width: 100%;
     height: 100%;
+    cursor: pointer;
   }
   p {
     margin: 10px 0;

@@ -4,6 +4,7 @@
       <el-row>
         <el-col :offset="2" :span="20">
           <el-card>
+            <!-- 头部 -->
             <div class="header">
               <div>
                 <h4 class="cat_name">全部</h4>
@@ -14,11 +15,14 @@
                   class="list_cat"
                   :categoriesAttr="categories"
                   :subAttr="sub"
+                  @emitQueryAll="QueryAll"
+                  @emitQueryCat='queryCat'
                   v-show="isShow"
                 ></play-list-cat>
               </div>
-              <span>热门</span>
+              <span @click="QueryAll">热门</span>
             </div>
+            <!-- 内容 -->
             <div class="content">
               <ul>
                 <li v-for="item in playList" :key="item.id">
@@ -40,6 +44,19 @@
               </ul>
             </div>
           </el-card>
+          <!-- 分页 -->
+          <div class="pagination">
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="this.pagenum"
+              :page-sizes="[50, 100, 300, 400]"
+              :page-size="this.queryInfo.limit"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="this.total"
+            >
+            </el-pagination>
+          </div>
         </el-col>
       </el-row>
     </div>
@@ -70,6 +87,8 @@ export default {
       },
       // 歌单数量
       total: null,
+      // 当前页
+      pagenum: 1,
       // 歌单数据
       playList: [],
     };
@@ -100,6 +119,18 @@ export default {
       this.total = res.total;
     },
 
+    // 歌单展示数量改变事件
+    handleSizeChange(pagesize) {
+      this.queryInfo.limit = pagesize;
+      this.getPlaylistTopRef();
+    },
+    // 当前页改变事件
+    handleCurrentChange(pagenum) {
+      this.pagenum = pagenum;
+      this.queryInfo.offset = (this.pagenum - 1) * this.queryInfo.limit;
+      this.getPlaylistTopRef();
+    },
+
     // 歌单 id 处理函数
     ...mapMutations(["playListIdMutations"]),
     // 点击歌单跳转至歌单详情页
@@ -111,8 +142,20 @@ export default {
       this.$router.push("/singlist/detail");
     },
     // 点击分类按钮 展示分类选择框
-    showCat(){
-      this.isShow = true
+    showCat() {
+      this.isShow = !this.isShow;
+    },
+    // 点击全部风格 查询全部热门歌单
+    QueryAll() {
+      this.queryInfo.cat = ''
+      this.getPlaylistTopRef();
+      this.isShow = false;
+    },
+    // 点击其余分类按钮 查询对应分类歌单
+    queryCat(item){
+      this.queryInfo.cat = item
+      this.getPlaylistTopRef();
+      this.isShow = false;
     }
   },
   components: {
@@ -161,6 +204,7 @@ export default {
   position: absolute;
   left: -10px;
   top: 70px;
+  z-index: 1111;
 }
 
 .content ul {
@@ -232,5 +276,10 @@ export default {
       }
     }
   }
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 50px 0;
 }
 </style>

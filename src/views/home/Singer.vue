@@ -34,7 +34,12 @@
         </div>
         <el-card v-show="isShow_1">
           <ul>
-            <li class="bt" v-for="item in ListInfo" :key="item.id">
+            <li
+              class="bt"
+              v-for="item in ListInfo"
+              :key="item.id"
+              @click.prevent="saveSingerId(item.id)"
+            >
               <a href="#">{{ item.name }}</a>
               <a href="#" class="iconfont icon-icon--my"></a>
             </li>
@@ -49,6 +54,7 @@
 import SingerType from "../../components/singer/SingerType.vue"; // 导入左侧歌手分类组件
 import SingerShow from "../../components/singer/SingerShow.vue"; // 导入右侧歌手展示组件
 import { getHotSinger, getSingerType } from "../../network/singer"; // 热门歌手 歌手分类 网络请求
+import { mapMutations } from "vuex";
 export default {
   name: "Singer",
   data() {
@@ -218,6 +224,14 @@ export default {
         this.ListInfo = res.artists.slice(10);
         console.log(res);
       }
+    },
+    // vuex 歌手 id 处理函数
+    ...mapMutations(["singerIdMutations"]),
+    // 点击歌手存储歌手 id
+    saveSingerId(id) {
+      this.singerIdMutations(id);
+      // console.log(this.$store.state.singerId)
+       this.$router.push('/singer/detail')
     },
   },
   components: {
