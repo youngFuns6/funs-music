@@ -10,6 +10,7 @@ import Mv from '../views/home/Mv.vue'
 import newSongInfo from '../views/homeChildren/newSongInfo.vue'
 import SingListDet from '../views/singListChildren/SingListDet.vue'
 import SingerDet from '../components/singer/SingerDet.vue'
+import SongDet from '../components/song/songDet/SongDet.vue'
 
 
 
@@ -24,28 +25,17 @@ const routes = [
     children: [
       {
         path: '/home', component: Home,
-
       },
-      {
-        path: '/newSongInfo', component: newSongInfo
-      },
-      {
-        path: '/mymusic', component: MyMusic,
-
-      },
+      { path: '/newSongInfo', component: newSongInfo },
+      { path: '/mymusic', component: MyMusic, },
       {
         path: '/singer', component: Singer
-
       },
-      {
-        path: '/singlist', component: SingList,
-      },
+      { path: '/singlist', component: SingList, },
       { path: '/singlist/detail', component: SingListDet },
-      {path: '/singer/detail', component: SingerDet},
-      {
-        path: '/mv', component: Mv
-      }
-
+      { path: '/singer/detail', component: SingerDet },
+      { path: '/songs/detail', component: SongDet },
+      { path: '/mv', component: Mv }
     ],
 
   },

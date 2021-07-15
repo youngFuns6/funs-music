@@ -20,7 +20,7 @@
           >
             <el-menu-item index="/home"
             
-              ><router-link to="home" tag="div" class="link-div"
+              ><router-link to="/home" tag="div" class="link-div"
                 >发现音乐</router-link
               ></el-menu-item
             >

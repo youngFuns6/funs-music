@@ -15,17 +15,17 @@ export function getHotSinger(queryInfo) {
     })
 }
 
-// 获取歌手详情
-// export function getSingerDet(id) {
-//     return request({
-//         url: '/artist/detail',
-//         params: {
-//             id: id
-//         }
+// 获取歌手描述
+export function getSingerDesc(id) {
+    return request({
+        url: '/artist/desc',
+        params: {
+            id: id
+        }
 
-//     })
+    })
 
-// }
+}
 
 // 获取歌手详情及单曲
 export function getArtists(id) {

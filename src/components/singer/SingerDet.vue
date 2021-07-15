@@ -32,7 +32,11 @@
           <el-tabs type="border-card" :stretch="true" @tab-click="toggle">
             <!-- 热门作品 -->
             <el-tab-pane label="热门作品">
-              <el-table :data="hotSongs"  :row-style="{backgroundColor:'#EDE3E7'}" :show-header='false' >
+              <el-table
+                :data="hotSongs"
+                :row-style="{ backgroundColor: '#EDE3E7' }"
+                :show-header="false"
+              >
                 <el-table-column
                   type="index"
                   label="#"
@@ -46,7 +50,7 @@
                 </el-table-column>
                 <el-table-column label="歌曲" width="400px" class="s_name">
                   <template #default="scope">
-                    <span class="l_s_name">{{ scope.row.name }}</span>
+                    <span class="l_s_name" >{{ scope.row.name }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="时长" width="200px">
@@ -92,12 +96,23 @@
                   </div>
                   <a href="#" class="mask_mv"></a>
                   <a href="#" class="icon_mv iconfont icon-bofang"></a>
-                  <p>{{item.name}}</p>
+                  <p>{{ item.name }}</p>
                 </li>
               </ul>
             </el-tab-pane>
             <!-- 艺人介绍 -->
-            <el-tab-pane label="艺人介绍"></el-tab-pane>
+            <el-tab-pane label="艺人介绍">
+              <div>
+                <p class="s_desc">{{singerInfo.name}}：简介</p>
+                <p class="intr">{{singerDesc.briefDesc}}</p>
+                <ul class="desc">
+                  <li v-for="(item1, index1) in this.singerDesc.introduction" :key="index1">
+                    <p class="s_desc">{{item1.ti}}</p>
+                    <p class="intr" v-for="(item2, index2) in item1.txt" :key="index2">{{item2}}</p>
+                  </li>
+                </ul>
+              </div>
+            </el-tab-pane>
           </el-tabs>
         </el-card>
       </el-col>
@@ -106,7 +121,12 @@
 </template>
     
 <script>
-import { getArtists, getSingerAl, getSingerMv } from "../../network/singer"; // 歌手相关 网络请求
+import {
+  getArtists,
+  getSingerAl,
+  getSingerMv,
+  getSingerDesc,
+} from "../../network/singer"; // 歌手相关 网络请求
 import { mapMutations } from "vuex";
 export default {
   name: "SingerDet",
@@ -126,26 +146,23 @@ export default {
       hotAlbums: [],
       // 歌手 MV
       mvs: [],
+      // 歌手描述
+      singerDesc: {
+        // 描述
+        briefDesc: {},
+        // 介绍
+        introduction: [],
+      },
     };
   },
   created() {
-    // this.getSingerDetRef();
     this.getArtistsRef();
   },
   methods: {
-    // 获取歌手详情
-    // async getSingerDetRef() {
-    //   const { data: res } = await getSingerDet(this.$store.state.singerId);
-    //   if (res.code !== 200) {
-    //     return this.$message.error("请求失败");
-    //   }
-    //   console.log(res);
-    //   this.singerInfo = res.data.artist;
-    // },
     // 获取歌手详情及单曲
     async getArtistsRef() {
       const { data: res } = await getArtists(this.$store.state.singerId);
-      //   console.log(res);
+      console.log(res);
       if (res.code !== 200) {
         return this.$message.error("获取歌手单曲失败");
       }
@@ -172,21 +189,39 @@ export default {
       this.hotAlbums = res.hotAlbums;
     },
     // 获取歌手 mv
-    async getSingerMvRef(){
-        const {data: res} = await getSingerMv(this.$store.state.singerId)
-        console.log(res)
-        this.mvs = res.mvs
+    async getSingerMvRef() {
+      const { data: res } = await getSingerMv(this.$store.state.singerId);
+      console.log(res);
+      this.mvs = res.mvs;
+    },
+    // 获取歌手描述
+    async getSingerDescRef() {
+      const { data: res } = await getSingerDesc(this.$store.state.singerId);
+      if (res.code !== 200) {
+        return this.$message.error("请求失败");
+      }
+      console.log(res);
+      this.singerDesc.briefDesc = res.briefDesc;
+      
+      // 处理 res.introduction 中 txt 数据
+        res.introduction.forEach(item => {
+          item.txt = item.txt.split('\n')  
+        });
+        this.singerDesc.introduction = res.introduction;
+        console.log(this.singerDesc.introduction)
     },
 
     // 监听 tab 栏切换事件 obj 为该面板对象实例 根据 paneName 属性请求不同数据
     toggle(obj) {
-    //   console.log(obj);
+      //   console.log(obj);
       if (obj.paneName == 0) {
         this.getArtistsRef();
       } else if (obj.paneName == 1) {
         this.getSingerAlRef();
-      }else if(obj.paneName == 2){
-          this.getSingerMvRef()
+      } else if (obj.paneName == 2) {
+        this.getSingerMvRef();
+      } else if (obj.paneName == 3) {
+        this.getSingerDescRef();
       }
     },
   },
@@ -286,8 +321,9 @@ export default {
   // background-color: #666;
 }
 
-.el-tabs  {
-    background-color: #500A16 ;
+.el-tabs {
+  background-color: #1b5e20;
+  color: #fff;
 }
 
 .u_mv {
@@ -295,10 +331,10 @@ export default {
   justify-content: space-between;
   flex-wrap: wrap;
   li {
-      position: relative;
-      width: 137px;
-      height: 140px;
-      margin: 50px;
+    position: relative;
+    width: 137px;
+    height: 140px;
+    margin: 50px;
   }
   .mv_cover {
     width: 137px;
@@ -309,35 +345,49 @@ export default {
     }
   }
   .mask_mv {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 137px;
-      height: 103px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 137px;
+    height: 103px;
   }
   .icon_mv {
-      position: absolute;
-      left: 50%;
-      top:50%;
-      transform: translate(-50%, -80%);
-      text-decoration: none;
-      color: #BDBDBD;
-      width: 44px;
-      height: 44px;
-      font-size: 40px;
-      &:hover {
-          color: #fff;
-      }
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -80%);
+    text-decoration: none;
+    color: #bdbdbd;
+    width: 44px;
+    height: 44px;
+    font-size: 40px;
+    &:hover {
+      color: #fff;
+    }
   }
   p {
-      margin: 5px 0;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      cursor: pointer;
-      &:hover {
-          text-decoration: underline;
-      }
+    margin: 5px 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
   }
+}
+.desc li {
+    margin: 20px 0;
+}
+
+.s_desc {
+  font-weight: 600;
+  line-height: 2;
+  
+}
+.intr {
+  font-size: 14px;
+  line-height: 2;
+  text-indent: 2em;
 }
 </style>

@@ -29,6 +29,8 @@ export default new Vuex.Store({
     singerId: '',
     // 歌单 id
     playListId: '',
+    // 歌曲 id
+    songId: '',
 
     // 音乐播放地址
     musicUrl: ''
@@ -58,6 +60,11 @@ export default new Vuex.Store({
     // 歌单 id 处理函数
     playListIdMutations(state, id) {
       state.playListId = id
+    },
+
+    // 歌曲 id 处理函数
+    SongIdMutations(state, id) {
+      state.SongId = id
     }
 
   },
