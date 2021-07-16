@@ -23,23 +23,8 @@
               >
             </span>
           </p>
-          <p class="opt_btn">
-            <el-button type="primary"
-              ><i class="iconfont icon-bofang"></i>播放</el-button
-            >
-            <el-button type="primary"
-              ><i class="iconfont icon-yinle"></i>收藏</el-button
-            >
-            <el-button type="primary"
-              ><i class="iconfont icon-fenxiang1"></i> 分享</el-button
-            >
-            <el-button type="primary"
-              ><i class="iconfont icon-xiazai"></i>下载</el-button
-            >
-            <el-button type="primary"
-              ><i class="iconfont icon-xinxi"></i>评论</el-button
-            >
-          </p>
+          <!-- 四个按钮 -->
+          <det-btn :totalAttr='playListCommentsAttr.total'></det-btn>
           <!-- 歌单描述 -->
           <div class="list-dec">
             <div>
@@ -85,7 +70,7 @@
         </el-table-column>
         <el-table-column label="歌曲标题" width="180">
           <template #default="scope">
-            <span class="row_po">{{ scope.row.name }}</span>
+            <span class="row_po" @click="getSongId(scope.row.id)">{{ scope.row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column label="时长">
@@ -99,6 +84,7 @@
               class="row_po"
               v-for="(item, index) in scope.row.ar"
               :key="item.id"
+              @click="getSingerId(item.id)"
               >{{ item.name
               }}<i v-if="index === scope.row.ar.length - 1 ? 0 : 1">/</i></span
             >
@@ -117,11 +103,20 @@
 </template>
     
 <script>
+import DetBtn from './DetBtn.vue' // 四个按钮
 import { mapMutations } from "vuex";
 export default {
   name: "MySongShow",
   props: {
+    // 歌单详情
     playListInfoAttr: {
+      type: Object,
+      default() {
+        return {};
+      },
+    },
+    // 歌单评论
+    playListCommentsAttr:{
       type: Object,
       default() {
         return {};
@@ -133,7 +128,7 @@ export default {
   },
   methods: {
     // 引入 vuex 中函数
-    ...mapMutations(["albumIdMutations"]),
+    ...mapMutations(["albumIdMutations",'singerIdMutations','SongIdMutations']),
 
     // 点击专辑跳转至专辑详情页面
     toggleNewSongInfo(id) {
@@ -143,7 +138,22 @@ export default {
       // 将 新碟 id 保存至本地
       window.sessionStorage.setItem("albumId", JSON.stringify(id));
     },
+     // 点击歌手 存储歌手 id 并跳转至歌手详情
+    getSingerId(id){
+      this.singerIdMutations(id)
+      window.sessionStorage.setItem('songId', JSON.stringify(id))
+      this.$router.push('/singer/detail')
+    },
+    // 点击歌曲 存储歌曲 id 并跳转至歌曲详情
+    getSongId(id){
+      this.SongIdMutations(id)
+      window.sessionStorage.setItem('songId', JSON.stringify(id))
+      this.$router.push('/songs/detail')
+    }
   },
+  components: {
+    DetBtn
+  }
 };
 </script>
     
@@ -230,10 +240,7 @@ export default {
   }
 }
 
-.opt_btn {
-  display: flex;
-  justify-content: space-between;
-}
+
 
 .show-list h4 {
   height: 50px;

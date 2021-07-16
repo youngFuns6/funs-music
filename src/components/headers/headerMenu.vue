@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <div class="container">
       <el-row>
         <!-- logo -->
@@ -19,7 +19,6 @@
             @select="setActiveIndex"
           >
             <el-menu-item index="/home"
-            
               ><router-link to="/home" tag="div" class="link-div"
                 >发现音乐</router-link
               ></el-menu-item
@@ -84,7 +83,7 @@
 
     <!--  发现音乐 我的音乐 歌手 歌单 MV -->
 
-    <router-view></router-view>
+    <router-view @emitLogin="ctrLogin"></router-view>
 
     <!-- 登录对话框 -->
     <login-dialog
@@ -136,7 +135,7 @@ export default {
     isLogin() {
       // console.log(this.$store.state.profile == null);
       if (this.$store.state.profile === null) {
-        return
+        return;
       } else {
         this.isAvatar = false;
         this.isButton = true;
@@ -145,21 +144,19 @@ export default {
         // console.log(this.$store.state.profile.nickName);
       }
     },
-
+    // 点击登录显示 登录框
     login() {
       this.isShow = true;
-     
+
       // console.log(this.isShow)
     },
+    // 登录框 叉号 事件
     ctrClosed() {
-      this.isShow = false; // 将子组件传的值重新赋给父组件的 isShow
-      // console.log(v)
+      this.isShow = false;
       this.isAvatar = true;
       this.isButton = false;
-      this.avatarUrl = this.$store.state.profile.avatarUrl;
-      this.nickName = this.$store.state.profile.nickName;
-      // console.log(this.$store.state.profile.nickName);
     },
+    // 登录框 登陆事件
     ctrLogin() {
       this.isShow = false;
       this.isAvatar = false;
@@ -191,16 +188,21 @@ export default {
         // 退出登录 清空状态及本地数据
         this.isAvatar = true;
         this.isButton = false;
-        
+
         window.sessionStorage.removeItem("profile");
         // console.log(window.sessionStorage.getItem("profile"));
         removeCookie("__remember_me");
+        if (this.$route.path === "/mymusic") {
+          // 退出登录跳转至 home
+          this.$router.push("/home");
+          window.sessionStorage.setItem("activeIndex", "/home");
+          this.$store.state.activeIndex = "/home";
+        }
       }
     },
 
     // 改变页面 activeIndex
     setActiveIndex(index) {
-      
       this.$store.state.activeIndex = index;
       // 将 activeIndex 保存至本地
       window.sessionStorage.setItem("activeIndex", index);
@@ -304,6 +306,4 @@ h1 {
 .el-button {
   margin-left: 20px;
 }
-
-
 </style>

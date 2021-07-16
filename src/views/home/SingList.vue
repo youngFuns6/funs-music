@@ -217,6 +217,7 @@ export default {
   width: 140px;
   height: 188px;
   margin: 20px 50px;
+ 
   .b_icon {
     position: absolute;
     left: 0;
@@ -246,10 +247,14 @@ export default {
     display: inline-block;
     width: 140px;
     height: 140px;
+    box-shadow: 0 0 10px;
+     border-radius: 5px;
+  overflow: hidden;
   }
   img {
     width: 100%;
     height: 100%;
+     
   }
   p {
     margin: 5px 0;

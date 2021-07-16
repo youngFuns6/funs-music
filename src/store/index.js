@@ -63,8 +63,8 @@ export default new Vuex.Store({
     },
 
     // 歌曲 id 处理函数
-    SongIdMutations(state, id) {
-      state.SongId = id
+    SongIdMutations(state, ids) {
+      state.songId = ids
     }
 
   },

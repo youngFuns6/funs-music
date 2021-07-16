@@ -17,3 +17,12 @@ export function getPlayComment(queryInfo) {
 
     })
 }
+
+// 获取歌曲评论
+export function getSongComment(queryInfo) {
+    return request({
+        url: '/comment/music',
+        params: queryInfo
+
+    })
+}

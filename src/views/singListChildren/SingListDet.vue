@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col :offset="2" :span="20">
-        <my-song-show :playListInfoAttr="playListInfo"></my-song-show>
+        <my-song-show :playListInfoAttr="playListInfo" :playListCommentsAttr='playListComments'></my-song-show>
         <album-coment :albumComentsObj="playListComments"></album-coment>
         <!-- 分页 -->
         <div class="box">

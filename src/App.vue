@@ -41,15 +41,20 @@ export default {
     //   window.sessionStorage.getItem("profile")
     // );
 
+    this.SongIdMutations(JSON.parse(
+      window.sessionStorage.getItem("songId")
+    ))
+
     if (window.sessionStorage.getItem("activeIndex") === null) {
       this.$store.state.activeIndex = "/home";
     } else {
       this.$store.state.activeIndex =
         window.sessionStorage.getItem("activeIndex");
+        
     }
   },
   methods:{
-    ...mapMutations(['profileMutations', 'albumIdMutations', 'singerIdMutations', 'playListIdMutations'])
+    ...mapMutations(['profileMutations', 'albumIdMutations', 'singerIdMutations', 'playListIdMutations','SongIdMutations'])
   }
 };
 </script>

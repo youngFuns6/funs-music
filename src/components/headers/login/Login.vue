@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mask"></div>
-    <div class="loginBox" v-show="isShow" ref="loginBoxRef">
+    <div class="loginBox" ref="loginBoxRef">
       <h2 @mousedown="moveLogin">
         <span>登录</span>
         <span @click="close">×</span>
@@ -42,7 +42,7 @@
     
 <script>
 import { getQr, statusQr, loginPh } from "../../../network/login";
-import { getCookie, setCookie } from "../../../utils/cookie";
+// import { getCookie, setCookie } from "../../../utils/cookie";
 import { mapMutations } from "vuex";
 
 export default {
@@ -60,7 +60,7 @@ export default {
       cb(new Error("请输入合法手机号"));
     };
     return {
-      isShow: true, // 登录框显示与隐藏
+      // isShow: true, // 登录框显示与隐藏
       // 登录表单数据
       loginForm: {
         phone: 18855333112,
@@ -97,12 +97,16 @@ export default {
   methods: {
     // 点击 × 关闭登录框事件
     close() {
-      this.isShow = false;
       this.$emit("ctrClose"); // 通过自定义事件向父组件传值
-      this.isShow = this.ctrIsShow; // 关闭的同时将 isShow 重新赋值
-      // console.log(this.isShow)
       // 登录框关闭重置表单并移除验证
       this.$refs.loginRef.resetFields();
+      // 如果当前路由为 /login 则关闭窗口跳转至 home
+      if (this.$route.path === "/login") {
+        this.$router.push("/home");
+        window.sessionStorage.setItem("activeIndex", "/home");
+        this.$store.state.activeIndex = "/home";
+      }
+      // console.log(this.$route.path)
     },
     // 点击切换二维码登录
     toggleQr() {
@@ -178,18 +182,18 @@ export default {
       this.profileMutations(profile);
       // 将用户 信息 存入 sessionStorage
       window.sessionStorage.setItem("profile", JSON.stringify(profile));
-
-      // console.log(profile);
-      this.isShow = false;
       this.$emit("ctrLoginBtn");
-      this.isShow = this.ctrIsShow;
+
+      // 登录成功跳转至 mymusic
+      if (this.$route.path === "/login") {
+        this.$router.push("/mymusic");
+        window.sessionStorage.setItem("activeIndex", "/mymusic");
+        this.$store.state.activeIndex = "/mymusic";
+      }
     },
 
     // 登录框拖拽效果
     moveLogin(e) {
-      // console.log(this.$refs.loginBoxRef.offsetLeft);
-      // console.log(e.target.offsetLeft);
-
       let oh2 = this.$refs.loginBoxRef; // 获取目标元素
       // 计算鼠标相对元素位置
       let disX = e.clientX - oh2.offsetLeft;

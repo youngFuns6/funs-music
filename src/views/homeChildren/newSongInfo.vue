@@ -12,7 +12,7 @@
             <div class="albumInfo">
               <h3>{{ newSongInfoObj.album.name }}</h3>
               <p class="singer">
-                歌手：<a href="#">{{ newSongInfoObj.album.artist.name }}</a>
+                歌手：<a href="#" @click="getSingerId(newSongInfoObj.album.artist.id)">{{ newSongInfoObj.album.artist.name }}</a>
               </p>
               <p class="singer">
                 发行时间：{{ newSongInfoObj.album.publishTime | dataFormate }}
@@ -75,7 +75,7 @@
 
               <el-table-column label="歌曲" width="260">
                 <template #default="scope">
-                  <span class="row_po">{{ scope.row.name }}</span>
+                  <span class="row_po" @click="getSongId(scope.row.id)">{{ scope.row.name }}</span>
                 </template>
               </el-table-column>
 
@@ -85,6 +85,7 @@
                     class="row_po"
                     v-for="(item, index) in scope.row.ar"
                     :key="item.id"
+                    @click="getSingerId(item.id)"
                     >{{ item.name
                     }}<i v-if="index === scope.row.ar.length - 1 ? 0 : 1"
                       >/</i
@@ -130,7 +131,6 @@
           </div>
         </el-card>
         <!-- 相似歌手推荐 -->
-
         <el-row>
           <el-col>
             <el-card>
@@ -140,6 +140,7 @@
                   type="success"
                   v-for="(item, index) in simiSingers"
                   :key="index"
+                  @click="getSingerId(item.id)"
                 >
                   <img :src="item.picUrl" />
                   {{ item.name }}
@@ -157,6 +158,7 @@
 import { getNewSongInfo, getAlbumDet, getSimiSinger } from "../../network/Sing";
 import { getAlbumComment } from "../../network/comment";
 import AlbumComent from "../../components/coments/AlbumComent.vue"; // 导入专辑评论组件
+import {mapMutations} from 'vuex'
 
 export default {
   name: "newSongInfo",
@@ -332,6 +334,19 @@ export default {
         })
         .catch((err) => err);
     },
+    ...mapMutations(['singerIdMutations','SongIdMutations']),
+    // 点击歌手 存储歌手 id 并跳转至歌手详情
+    getSingerId(id){
+      this.singerIdMutations(id)
+      window.sessionStorage.setItem('songId', JSON.stringify(id))
+      this.$router.push('/singer/detail')
+    },
+    // 点击歌曲 存储歌曲 id 并跳转至歌曲详情
+    getSongId(id){
+      this.SongIdMutations(id)
+      window.sessionStorage.setItem('songId', JSON.stringify(id))
+      this.$router.push('/songs/detail')
+    }
   },
 
   components: {

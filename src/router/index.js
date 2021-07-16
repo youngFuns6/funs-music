@@ -11,6 +11,7 @@ import newSongInfo from '../views/homeChildren/newSongInfo.vue'
 import SingListDet from '../views/singListChildren/SingListDet.vue'
 import SingerDet from '../components/singer/SingerDet.vue'
 import SongDet from '../components/song/songDet/SongDet.vue'
+import ToLogin from '../views/ToLogin.vue'
 
 
 
@@ -35,6 +36,7 @@ const routes = [
       { path: '/singlist/detail', component: SingListDet },
       { path: '/singer/detail', component: SingerDet },
       { path: '/songs/detail', component: SongDet },
+      { path: '/login', component:  ToLogin},
       { path: '/mv', component: Mv }
     ],
 
@@ -53,10 +55,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   // to and from are both route objects. must call `next`.
   if (to.path === '/mymusic' && window.sessionStorage.getItem('profile') === null) {
-    next('/home')
-    store.state.activeIndex = '/home'
-    Vue.prototype.$message.error('请先登陆后刷新')
-
+    next('/login')
   }
   next()
 })

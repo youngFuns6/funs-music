@@ -14,7 +14,7 @@
         </el-col>
         <el-col :span="15"  class="right-show">
           <!-- 右侧歌单展示 -->
-          <my-song-show :playListInfoAttr="playListInfo"></my-song-show>
+          <my-song-show :playListInfoAttr="playListInfo" :playListCommentsAttr='playListComments'></my-song-show>
           <album-coment :albumComentsObj="playListComments"></album-coment>
           <!-- 分页 -->
           <div class="box">
@@ -32,6 +32,7 @@
         </el-col>
       </el-row>
     </div>
+    
   </div>
 </template>
     

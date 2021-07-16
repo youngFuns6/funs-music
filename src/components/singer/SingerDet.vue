@@ -50,7 +50,7 @@
                 </el-table-column>
                 <el-table-column label="歌曲" width="400px" class="s_name">
                   <template #default="scope">
-                    <span class="l_s_name" >{{ scope.row.name }}</span>
+                    <span class="l_s_name" @click="getSongDet(scope.row.id)">{{ scope.row.name }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="时长" width="200px">
@@ -170,7 +170,7 @@ export default {
       this.singerInfo = res.artist;
     },
     // vuex 歌手 id 处理函数
-    ...mapMutations(["albumIdMutations"]),
+    ...mapMutations(["albumIdMutations","SongIdMutations"]),
     // 点击专辑跳转至专辑详情页
     saveAlbumId(id) {
       // 储存专辑 id 到 vuex
@@ -178,6 +178,15 @@ export default {
       // 将歌手 id 存储到本地
       window.sessionStorage.setItem("albumId", JSON.stringify(id));
       this.$router.push("/newSongInfo");
+    },
+    // 点击歌曲跳转至歌曲详情页
+    getSongDet(ids){
+      // console.log(ids)
+      // 存储歌曲 id 到 vuex
+      this.SongIdMutations(ids)
+       // 将歌曲 id 存储到本地
+      window.sessionStorage.setItem("songId", JSON.stringify(ids));
+      this.$router.push("/songs/Detail");
     },
     // 获取歌手专辑
     async getSingerAlRef() {
@@ -339,6 +348,9 @@ export default {
   .mv_cover {
     width: 137px;
     height: 103px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px;
+    overflow: hidden;
     img {
       width: 100%;
       height: 100%;
