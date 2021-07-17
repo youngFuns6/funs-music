@@ -22,3 +22,8 @@ background-color: #748BA7;
     display: block;
     overflow: hidden;
 }
+
+
+.el-slider__runway {
+ margin: 0 ;
+}

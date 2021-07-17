@@ -10,7 +10,7 @@ export default new Vuex.Store({
   state: {
     // 主页菜单导航的 index
     activeIndex: '',
-    
+
     // cookie
     cookie: false,
     // 用户信息
@@ -33,7 +33,9 @@ export default new Vuex.Store({
     songId: '',
 
     // 音乐播放地址
-    musicUrl: ''
+    musicUrl: [
+
+    ]
 
   },
   mutations: {
@@ -65,6 +67,16 @@ export default new Vuex.Store({
     // 歌曲 id 处理函数
     SongIdMutations(state, ids) {
       state.songId = ids
+    },
+
+    // 音乐 url 处理函数
+    musicUrlMutations(state, arr) {
+      // 获取音乐地址等信息 加到数组
+      state.musicUrl.push(...arr)
+      // 获取当前歌曲
+      // getSongsDet()
+      // 将当前 音乐数组信息保存至本地
+      window.localStorage.setItem('musicUrl', JSON.stringify(state.musicUrl))
     }
 
   },

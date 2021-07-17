@@ -63,8 +63,8 @@ export default {
       // isShow: true, // 登录框显示与隐藏
       // 登录表单数据
       loginForm: {
-        phone: 18855333112,
-        password: "384597439.ycj",
+        phone: null,
+        password: "",
       },
 
       // 登录表单验证规则

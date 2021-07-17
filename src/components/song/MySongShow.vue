@@ -64,7 +64,7 @@
         <el-table-column type="index" width="50"> </el-table-column>
         <el-table-column type="index" width="100">
           <template #default="scope">
-            <i class="iconfont icon-hm_video_light"></i>
+            <i class="iconfont icon-hm_video_light" @click="saveAudio(scope.row.id)"></i>
             <i class="iconfont icon-chakanMV" v-show="scope.row.mv"></i>
           </template>
         </el-table-column>
@@ -105,6 +105,7 @@
 <script>
 import DetBtn from './DetBtn.vue' // 四个按钮
 import { mapMutations } from "vuex";
+import {getSongUrl} from '../../network/Sing'
 export default {
   name: "MySongShow",
   props: {
@@ -128,7 +129,7 @@ export default {
   },
   methods: {
     // 引入 vuex 中函数
-    ...mapMutations(["albumIdMutations",'singerIdMutations','SongIdMutations']),
+    ...mapMutations(["albumIdMutations",'singerIdMutations','SongIdMutations','musicUrlMutations']),
 
     // 点击专辑跳转至专辑详情页面
     toggleNewSongInfo(id) {
@@ -149,6 +150,16 @@ export default {
       this.SongIdMutations(id)
       window.sessionStorage.setItem('songId', JSON.stringify(id))
       this.$router.push('/songs/detail')
+    },
+    // 点击播放图标 播放歌曲
+    async saveAudio(id){
+      // console.log(id)
+      const {data: res} = await getSongUrl(id)
+      if(res.code !== 200){
+        return this.$message.error('播放失败')
+      }
+      this.musicUrlMutations(res.data)
+      console.log(res.data)
     }
   },
   components: {
@@ -192,7 +203,7 @@ export default {
 
   .bq_text {
     float: left;
-    height: 40px;
+    // height: 40px;
     line-height: 40px;
     font-size: 24px;
   }

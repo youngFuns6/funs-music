@@ -93,6 +93,9 @@
       @ctrClose="ctrClosed"
       @ctrLoginBtn="ctrLogin"
     ></login-dialog>
+
+   <!-- 播放控件 -->
+   <play-bar v-show="PlayBarIsShow" class="play-bar"></play-bar>
   </div>
 </template>
     
@@ -102,6 +105,7 @@ import Search from "../headers/serach/Search.vue"; // 导入搜索框组件
 import userInfo from "./userInfo/userInfo.vue"; // 导入用户详情信息组件
 import { getUserInfo, getQuit } from "../../network/login"; // 用户详情信息 网络请求
 import newSongInfo from "../../views/homeChildren/newSongInfo.vue"; // 新碟详情组件
+import PlayBar from '../play/PlayBar.vue' // 引入播放控件
 import { removeCookie } from "../../utils/cookie";
 
 export default {
@@ -123,6 +127,8 @@ export default {
       },
       // 退出按钮隐藏与显示
       isButton: false,
+      // 播放控件 显示与隐藏
+      PlayBarIsShow:true
     };
   },
 
@@ -214,6 +220,7 @@ export default {
     userInfo,
     Search,
     newSongInfo,
+    PlayBar
   },
 };
 </script>
@@ -305,5 +312,12 @@ h1 {
 
 .el-button {
   margin-left: 20px;
+}
+
+.play-bar {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 99999;
 }
 </style>

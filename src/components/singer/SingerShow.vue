@@ -12,14 +12,14 @@
         <div>
           <div>
             <ul class="content">
-              <li v-for="item in ListInfoAttr" :key="item.id" @click.prevent="saveSingerId(item.id)">
-                <div class="cover">
+              <li v-for="item in ListInfoAttr" :key="item.id" >
+                <div class="cover" @click.prevent="saveSingerId(item.id)">
                   <img :src="item.img1v1Url" alt="" />
                 </div>
 
                 <p class="clearfix">
-                  <a href="#">{{ item.name }}</a>
-                  <a href="#" class="iconfont icon-icon--my"></a>
+                  <a href="#" @click.prevent="saveSingerId(item.id)">{{ item.name }}</a>
+                  <a href="#" class="iconfont icon-icon--my" @click.prevent="saveSingerId(item.id)"></a>
                 </p>
               </li>
             </ul>

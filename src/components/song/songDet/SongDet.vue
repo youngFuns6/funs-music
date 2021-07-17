@@ -36,7 +36,11 @@
               <!-- 按钮 -->
               <det-btn :totalAttr="songComments.total"></det-btn>
               <!-- 歌词 -->
-              <div class="rc" v-html="lrc"></div>
+              <div :class="className">
+                <div  v-html="lrc"></div>
+                <a href="#" class="rc_on" @click.prevent="onShow" v-if="showText">展开</a>
+                <a href="#" class="rc_on" @click.prevent="onClose" v-else>收起</a>
+              </div>
             </div>
           </div>
           <!-- 评论 -->
@@ -88,6 +92,10 @@ export default {
       },
       // 歌词
       lrc: "",
+      // 歌词展开收起按钮 文字
+      showText: true,
+      // 歌词样式类名
+      className: 'rc',
       // 相似歌单
       simiPlaylist: [],
       // 相似歌曲
@@ -112,7 +120,7 @@ export default {
     // 获取歌曲详情
     async getSongsDetRef() {
       const { data: res } = await getSongsDet(this.$store.state.songId);
-      // console.log(res);
+      console.log(res);
       if (res.code !== 200) {
         return this.$message.error("获取歌曲详情失败");
       }
@@ -131,6 +139,16 @@ export default {
         .map((item) => item.slice(11))
         .join("<br>");
     },
+    // 监听歌词展开按钮事件
+    onShow(){
+      this.className = 'rc_s'
+      this.showText = false
+    },
+    // 监听歌词收起按钮事件
+    onClose(){
+      this.className = 'rc'
+      this.showText = true
+    },
     // 获取相似歌单
     async getSimiPlaylistRef() {
       const { data: res } = await getSimiPlaylist(this.$store.state.songId);
@@ -147,7 +165,7 @@ export default {
     // 获取歌曲评论
     async getSongCommentRef() {
       const { data: res } = await getSongComment(this.queryInfo);
-      console.log(res);
+      // console.log(res);
       this.songComments = res;
     },
     // 监听页面数量
@@ -243,10 +261,25 @@ export default {
     }
   }
   .rc {
+    position: relative;
     height: 320px;
     overflow: hidden;
     margin-top: 50px;
     line-height: 2;
+  }
+  .rc_s {
+    position: relative;
+    margin-top: 50px;
+    line-height: 2;
+  }
+  .rc_on {
+    position: absolute;
+    left: 400px;
+    bottom: 0px;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 </style>

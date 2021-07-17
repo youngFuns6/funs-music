@@ -35,6 +35,7 @@ import {
   Tag,
   Tabs,
   TabPane,
+  Slider,
   
  
 
@@ -64,6 +65,7 @@ Vue.use(Tooltip)
 Vue.use(Tag)
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(Slider)
 
 
 
@@ -86,6 +88,7 @@ Vue.filter('dataFormate', function (time) {
 // 毫秒过滤器
 Vue.filter('secondFormate', function (s) {
   let time = parseFloat(s) / 1000;
+  if (s === 0 || isNaN(s)) { return '00:00' }
   if (time != null && time != '') {
     if (time < 60) { return (parseInt(time) + '').padStart(2, '0') }
     else if (time >= 60 && time <= 60 * 60) { return `${(parseInt(parseFloat(time / 60)) + '').padStart(2, '0')}:${(parseInt(parseFloat(time % 60)) + '').padStart(2, '0')}` }
@@ -98,7 +101,7 @@ Vue.filter('secondFormate', function (s) {
 // 播放数超万过滤器
 Vue.filter('counFormate', function (count) {
   if (count < 10000) {
-    return (count / 10000).toFixed(2)
+    return `${(count / 10000).toFixed(2)}万`
   }
   return `${Math.ceil(count / 10000)}万`
 })
