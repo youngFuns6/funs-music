@@ -5,7 +5,7 @@ import Vuex from 'vuex'
 
 
 Vue.use(Vuex)
-
+import { getSongsDet } from "../network/Sing"; // 歌曲详情 网络请求
 export default new Vuex.Store({
   state: {
     // 主页菜单导航的 index
@@ -33,9 +33,16 @@ export default new Vuex.Store({
     songId: '',
 
     // 音乐播放地址
-    musicUrl: [
-
-    ]
+    musicUrl: { url: '', id: '' },
+    // 当前播放音乐信息
+    currentMusicInfo: {
+      al: {},
+      name: '',
+      picUrl: '',
+      ar: []
+    },
+    // 音乐播放列表音乐 id
+    musicPlayListId: []
 
   },
   mutations: {
@@ -70,13 +77,47 @@ export default new Vuex.Store({
     },
 
     // 音乐 url 处理函数
-    musicUrlMutations(state, arr) {
-      // 获取音乐地址等信息 加到数组
-      state.musicUrl.push(...arr)
-      // 获取当前歌曲
-      // getSongsDet()
-      // 将当前 音乐数组信息保存至本地
+    musicUrlMutations(state, id) {
+      // 获取音乐地址
+      state.musicUrl.url = `https://music.163.com/song/media/outer/url?id=${id}.mp3`
+      state.musicUrl.id = id
+      // console.log(state.musicUrl)
+      // 如果音乐播放列表有该歌曲则不进行 push
+      if (state.musicPlayListId.indexOf(id) === -1) {
+        state.musicPlayListId.push(id)
+      }
+      // 获取当前播放音乐的名字 头像等信息
+      // 获取歌曲 头像 歌名 歌手
+      getSongsDet(id).then((res) => {
+        state.currentMusicInfo.al = res.data.songs[0].al;
+        state.currentMusicInfo.name = res.data.songs[0].name;
+        state.currentMusicInfo.picUrl = res.data.songs[0].picUrl;
+        state.currentMusicInfo.ar = res.data.songs[0].ar;
+        // console.log(state.currentMusicInfo);
+
+      });
+      // 保存至本地
       window.localStorage.setItem('musicUrl', JSON.stringify(state.musicUrl))
+      window.localStorage.setItem('musicPlayListId', JSON.stringify(state.musicPlayListId))
+    },
+
+    // 更新音乐 地址
+    updataMusicUrl(state,url) {
+      state.musicUrl = url
+    },
+
+    // 音乐播放列表 id 处理函数
+    musicPlayListId(state, id) {
+      // 如果音乐播放列表有该歌曲则不进行 push
+      if (state.musicPlayListId.indexOf(id) === -1) {
+        state.musicPlayListId.push(id)
+      }
+      window.localStorage.setItem('musicPlayListId', JSON.stringify(state.musicPlayListId))
+    },
+
+    // 更新音乐播放列表 id
+    updataMusicPlayListId(state,arr) {
+      state.musicPlayListId = arr
     }
 
   },

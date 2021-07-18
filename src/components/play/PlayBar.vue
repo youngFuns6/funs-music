@@ -1,6 +1,6 @@
 <template>
   <div class="wrop">
-    <audio :src="musicUrl"></audio>
+    <audio :src="musicUrl" autoplay></audio>
     <div class="r_s_wrop">
       <div class="lock"></div>
     </div>
@@ -20,9 +20,13 @@
             <div class="m_wr">
               <p>
                 <!-- 歌名 -->
-                <span>{{ songsDet.name }}</span>
+                <span>{{ songsDet.name }} </span>
+                <i class="iconfont icon-chakanMV m_wr_mv"></i>
                 <!-- 歌手 -->
-                <span v-for="(item, index) in songsDet.ar" :key="index"
+                <span
+                  class="m_wr_s_i"
+                  v-for="(item, index) in songsDet.ar"
+                  :key="index"
                   ><i>{{ item.name }}</i
                   ><i>{{
                     index === songsDet.ar.length - 1 ? "" : "/"
@@ -65,7 +69,7 @@
 </template>
     
 <script>
-import { mapMutations } from "vue";
+import { mapMutations } from "vuex";
 import { getSongsDet } from "../../network/Sing"; // 歌曲详情 网络请求
 import MusicPlaylist from "./MusicPlaylist.vue"; // 引入播放列表组件
 export default {
@@ -89,15 +93,10 @@ export default {
     };
   },
   created() {
-    // 获取歌曲 头像 歌名 歌手
-    getSongsDet(
-      this.$store.state.musicUrl[this.$store.state.musicUrl.length - 1].id
-    ).then((res) => {
-      this.songsDet = res.data.songs[0];
-      // console.log(res);
-    });
+    this.getSongDet();
   },
   methods: {
+    ...mapMutations(['musicUrlMutations']),
     // 格式化滑块值
     dataFormate(val) {
       return val;
@@ -116,11 +115,7 @@ export default {
         // 先拿到 url 再执行 play 函数
         new Promise((resolve, reject) => {
           // 音乐 url
-          this.musicUrl =
-            this.$store.state.musicUrl[
-              this.$store.state.musicUrl.length - 1
-            ].url;
-
+          this.musicUrl = this.$store.state.musicUrl.url;
           resolve();
           reject(err);
         })
@@ -134,9 +129,6 @@ export default {
             };
             this.play = false;
           })
-          .then(() => {
-            this.duration = songAudio.duration;
-          })
           .catch((err) => err);
       } else {
         // 按钮变为播放
@@ -145,6 +137,24 @@ export default {
         songAudio.pause();
         this.play = true;
       }
+    },
+
+    // 获取当前歌曲详情
+    getSongDet() {
+      // 获取到音乐 id 后才能获取到歌曲详情
+      this.musicUrlMutations(JSON.parse(window.localStorage.getItem('musicUrl')).id)
+      this.songsDet = this.$store.state.currentMusicInfo;
+      // new Promise((resolve, reject) => {
+      //   if (this.$store.state.musicUrl.id !== '') {
+      //     resolve(this.$store.state.currentMusicInfo);
+      //   }
+      //   reject(err);
+      // }).then(() => {
+      //   console.log('666')
+      //   // 获取歌曲 头像 歌名 歌手
+      //   this.songsDet = this.$store.state.currentMusicInfo;
+      //   console.log(this.songsDet);
+      // }).catch(err => console.log(err));
     },
   },
   computed: {},
@@ -265,6 +275,21 @@ export default {
       width: 581px;
       height: 47px;
       margin-right: 15px;
+      p .m_wr_mv {
+        margin-right: 20px;
+        color: #959595;
+        cursor: pointer;
+        &:hover {
+          color: #fff;
+        }
+      }
+      .m_wr_s_i {
+        color: #959595;
+        i:first-child:hover {
+          cursor: pointer;
+          text-decoration: underline;
+        }
+      }
       .el-slider {
         width: 500px;
       }

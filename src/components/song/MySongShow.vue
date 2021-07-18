@@ -153,13 +153,9 @@ export default {
     },
     // 点击播放图标 播放歌曲
     async saveAudio(id){
-      // console.log(id)
-      const {data: res} = await getSongUrl(id)
-      if(res.code !== 200){
-        return this.$message.error('播放失败')
-      }
-      this.musicUrlMutations(res.data)
-      console.log(res.data)
+      // 存储当前音乐 id
+      this.musicUrlMutations(id)
+      // console.log(res.data)
     }
   },
   components: {

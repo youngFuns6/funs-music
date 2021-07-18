@@ -8,10 +8,7 @@ html {
     background-color: #80cbc4;
 }
 
-.el-input.is-active .el-input__inner, .el-input__inner:focus {
-    border-color: transparent;
-    outline: 0;
-} 
+
 
 .el-card {
 background-color: #748BA7;
