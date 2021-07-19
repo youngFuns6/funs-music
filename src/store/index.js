@@ -42,7 +42,8 @@ export default new Vuex.Store({
       ar: []
     },
     // 音乐播放列表音乐 id
-    musicPlayListId: []
+    musicPlayListId: [],
+    
 
   },
   mutations: {
@@ -87,12 +88,13 @@ export default new Vuex.Store({
         state.musicPlayListId.push(id)
       }
       // 获取当前播放音乐的名字 头像等信息
-      // 获取歌曲 头像 歌名 歌手
       getSongsDet(id).then((res) => {
         state.currentMusicInfo.al = res.data.songs[0].al;
         state.currentMusicInfo.name = res.data.songs[0].name;
         state.currentMusicInfo.picUrl = res.data.songs[0].picUrl;
         state.currentMusicInfo.ar = res.data.songs[0].ar;
+        state.currentMusicInfo.dt = res.data.songs[0].dt
+        state.currentMusicInfo.mv = res.data.songs[0].mv
         // console.log(state.currentMusicInfo);
 
       });
@@ -118,7 +120,9 @@ export default new Vuex.Store({
     // 更新音乐播放列表 id
     updataMusicPlayListId(state,arr) {
       state.musicPlayListId = arr
-    }
+    },
+
+    
 
   },
   actions: {

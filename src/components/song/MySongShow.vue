@@ -129,7 +129,7 @@ export default {
   },
   methods: {
     // 引入 vuex 中函数
-    ...mapMutations(["albumIdMutations",'singerIdMutations','SongIdMutations','musicUrlMutations']),
+    ...mapMutations(["albumIdMutations",'singerIdMutations','SongIdMutations','musicUrlMutations', 'onPlayMutations']),
 
     // 点击专辑跳转至专辑详情页面
     toggleNewSongInfo(id) {
@@ -156,6 +156,8 @@ export default {
       // 存储当前音乐 id
       this.musicUrlMutations(id)
       // console.log(res.data)
+      // 通过事件总线触发播放条的 播放事件
+      this.$bus.$emit('onPlay')
     }
   },
   components: {
