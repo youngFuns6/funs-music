@@ -69,7 +69,6 @@
             class="m-playlist"
             @closeDialog="close"
             v-show="isShow"
-            
           ></music-playlist>
           <!-- 音频 -->
           <audio
@@ -176,6 +175,9 @@ export default {
         this.duration = this.$refs.audioRef.duration;
         // 当前时间动态赋值给滑块
         this.playValue = this.$refs.audioRef.currentTime;
+        // console.log(this.playValue)
+        // 将当前歌曲时间传给 播放列表
+        this.$bus.$emit('currentTime',this.$refs.audioRef.currentTime)
       }
       // 播放完毕 playValue 重置
       if (parseInt(this.playValue) === parseInt(this.$refs.audioRef.duration)) {

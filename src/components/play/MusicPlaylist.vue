@@ -39,7 +39,13 @@
         <!-- 歌词展示 -->
         <div class="lrc">
           <div class="lrc_c">
-            <p v-for="(item, index) in lrcInfo" :key="index">
+            <p
+              v-for="(item, index) in lrcInfo"
+              :key="index"
+              :class="[active === index ? 'lineLight' : '']"
+              ref="lrcRef"
+              :data-index="index"
+            >
               {{ item.lrc }}
             </p>
           </div>
@@ -54,6 +60,7 @@
     
 <script>
 import { getSongsDet, getLyric } from "../../network/Sing"; // 歌曲详情 网络请求
+import { handlerSlide, handlerLrcSco, lrcscroll } from "../../utils/lrcHandler"; // 引入滑块相关处理函数
 export default {
   name: "MusicPlaylist",
   props: {},
@@ -73,10 +80,14 @@ export default {
           lrc: "",
         },
       ],
+      // 当前歌词行高亮类名
+      active: 0,
+
       // 控制歌词播放
       // playLrc: false
     };
   },
+  updated() {},
   created() {
     //  当前歌曲名
     getSongsDet(this.$store.state.musicUrl.id).then((res) => {
@@ -85,64 +96,15 @@ export default {
     this.getPlayMusicLrc();
     this.getPlayMusicList();
     // 播放条点击播放传递的事件
-    this.$bus.$on("onPlayLrc", () => {
-      // 获取滑块元素
-      let slide = document.querySelector(".s-scorll-r");
-
-      // 整个歌词高度
-      let lrcHeight = 35 * this.lrcInfo.length;
-      // 滚动条高度
-      let slideHeight = (260 / lrcHeight) * 260 + "px";
-      // 限定滑块的最小值
-      if (slideHeight <= "10px") {
-        slideHeight = "10px";
-      }
-      // 如果长度大于 1 没有歌曲 则隐藏滑块
-      if (260 / lrcHeight >= 1) {
-        slide.style.display = "none";
-      }
-      // 设置滑块高度
-      slide.style.height = slideHeight;
-
-      // this.lrcInfo.forEach(item => {
-
-      // })
-    });
+    this.$bus.$on("onPlayLrc", () => {});
   },
   mounted() {
-    // 获取歌词容器
-    let lrcWrop = document.querySelector(".lrc");
-    // 获取滑块
-    let slide = document.querySelector('.s-scorll-r')
-    // 获取歌词元素
-    let lrc = document.querySelector('.lrc_c')
-    // 获取歌词高度
-    let lrcHeight = 35 * document.querySelector('.lrc_c p').clientHeight
-    // 滑块滚动增量
-    let y = 0;
-    // 监听 鼠标滚轮事件
-    lrcWrop.addEventListener("mousewheel", (e) => {
-      console.log(e);
-      // 如果滑块向下滚动
-      if (e.wheelDeltaY < 0) {
-        // 每次滚动 10 px
-        y += 10;
-      } else if (e.wheelDeltaY > 0) {
-        // 如果滑块向上滚动
-        y -= 10;
+    this.$nextTick(() => {
+      // console.log(this.$refs.lrcRef.dataset.index);
+      // 歌词高亮到第四行开始滚动
+      if (parseInt(this.$refs.lrcRef) === 4) {
+        document.querySelector("lrc_c").style.top = "-35px";
       }
-      // 限制滚动范围
-      if(y <= 0){
-        y = 0
-      }
-      if(y > lrcWrop.clientHeight - slide.clientHeight){
-        y = lrcWrop.clientHeight - slide.clientHeight
-      }
-      // 滑块滚动位置
-      slide.style.top = y +'px'
-      // 歌词变化位置
-      lrc.style.top = -y / lrcWrop.clientHeight * lrcHeight + 'px'
-      console.log(lrc.clientHeight)
     });
   },
   watch: {
@@ -156,6 +118,61 @@ export default {
         this.getPlayMusicList();
       },
       deep: true,
+      immediate: true,
+    },
+    lrcInfo: {
+      // 监听歌词变化 处理滑块高度 歌词滚动
+      handler() {
+        // 获取歌词元素
+        let lrc = document.querySelector(".lrc_c");
+
+        // 获取歌词容器
+        let lrcWrop = document.querySelector(".lrc");
+
+        // let lrcHeight = this.lrcInfo.length * 35
+        // 无法保证每个 p 元素高度都为 35 所以通过鼠标滚动函数回调拿到歌词实际高度
+
+        // 获取滑块元素
+        let slide = document.querySelector(".s-scorll-r");
+        // 整个歌词高度
+        // let lrcHeight = 0
+        // 歌词容器高度
+        let wropHeight = 260;
+        // console.log(wropHeight);
+
+        // 歌词滚动处理函数
+        handlerLrcSco(lrcWrop, slide, lrc, callback);
+        // 拿到滚动函数 回调传的参数  此方法有个小 bug 滑块高度 滚动时会有一个偏差
+        function callback(value) {
+          // 动态设置滑块高度 函数
+          handlerSlide(slide, value, wropHeight);
+        }
+      },
+      deep: true,
+      // immediate: true
+    },
+    playTime: {
+      handler() {
+        // 实时监听当前播放时间 给当前歌词添加 高亮
+        this.$bus.$on("currentTime", (value) => {
+          // console.log(value);
+          // this.playTime = value;
+          // 存储每次循环满足歌词时间小于当前时间的 index
+          let arr = [];
+          this.lrcInfo.forEach((item, index) => {
+            // 如果歌词时间小于等于播放时间 则当前行高亮
+            if (parseInt(item.duration) <= value) {
+              // console.log(index)
+              arr.push(index);
+
+              //  每首歌歌词最后一句时间为空 总会满足条件 所以数组中倒数第二个 index 为当前高亮行
+              this.active = arr[arr.length - 2];
+              // console.log(arr);
+            }
+          });
+        });
+      },
+      immediate: true,
     },
   },
   methods: {
@@ -182,14 +199,22 @@ export default {
       if (res.code !== 200) {
         return this.$message.error("获取歌词失败");
       }
-      // 歌词信息处理
-      this.lrcInfo = res.lrc.lyric.split("\n").map((item) => {
-        return {
-          duration: item.slice(1, 3) * 60 + +item.slice(4, 10),
-          lrc: item.slice(11),
-        };
-      });
-      // console.log(this.lrcInfo)
+      // console.log(res.lrc)
+      // 判断歌词列表中是否有歌词 没有则清空列表
+      if (!res.lrc) {
+        this.lrcInfo.lrc = [];
+      } else {
+        // 歌词信息处理
+        this.lrcInfo = res.lrc.lyric.split("\n").map((item) => {
+          return {
+            // duration: item.slice(0, 11),
+            // 时间处理成秒
+            duration: item.slice(1, 3) * 60 + +item.slice(4, 10),
+            lrc: item.slice(11),
+          };
+        });
+        // console.log(this.lrcInfo);
+      }
     },
   },
 };
@@ -320,12 +345,14 @@ export default {
     transform: translateX(-50%);
     margin: 20px 0;
     color: #7e7e7e;
+    // height: 260px;
     p {
       line-height: 35px;
       text-align: center;
-      height: auto;
+      width: 400px;
       min-height: 35px;
       font-size: 14px;
+      transition: all 0.2s;
     }
   }
 
@@ -356,5 +383,9 @@ export default {
 .add-class {
   background-color: #0f0f0f !important;
   color: #fff !important;
+}
+.lineLight {
+  color: #fff !important;
+  font-size: 16px !important;
 }
 </style>
