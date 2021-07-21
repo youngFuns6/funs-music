@@ -60,7 +60,7 @@
     
 <script>
 import { getSongsDet, getLyric } from "../../network/Sing"; // 歌曲详情 网络请求
-import { handlerSlide, handlerLrcSco, lrcscroll } from "../../utils/lrcHandler"; // 引入滑块相关处理函数
+import { handlerSlide, handlerLrcSco } from "../../utils/lrcHandler"; // 引入滑块相关处理函数
 export default {
   name: "MusicPlaylist",
   props: {},
@@ -165,14 +165,42 @@ export default {
               // console.log(index)
               arr.push(index);
 
-              //  每首歌歌词最后一句时间为空 总会满足条件 所以数组中倒数第二个 index 为当前高亮行
-              this.active = arr[arr.length - 2];
+              //   数组最后一个 为当前高亮行
+              this.active = arr[arr.length - 1];
               // console.log(arr);
             }
           });
         });
       },
       immediate: true,
+    },
+    active: {
+      // 监听歌词变化 实现歌词自动滚动
+      handler() {
+        // let slide = document.querySelector(".s-scorll-r");
+        // // 整个歌词高度
+        // let lrcHeight = document.querySelector('.lrc_c').clientHeight
+        // // 歌词容器高度
+        // let wropHeight = 260;
+        // handlerSlide(slide,lrcHeight,wropHeight)
+        // console.log('666')
+
+        if (this.active >= 3 && this.active <= this.lrcInfo.length - 2) {
+          let slide = document.querySelector(".s-scorll-r");
+          // 整个歌词高度
+          let lrcHeight = document.querySelector(".lrc_c").clientHeight;
+          // 歌词容器高度
+          let wropHeight = 260;
+          // 设置滑块高度
+          handlerSlide(slide, lrcHeight, wropHeight);
+          // console.log(lrcHeight)
+          // 歌词每次上移 35px
+          document.querySelector(".lrc_c").style.top =
+            -35 * (this.active - 3) + "px";
+          // 歌词上移 35px 滑块需下移 35/lrcHeight * 260
+          slide.style.top = (35 / lrcHeight) * 240  * (this.active - 3) + "px";
+        }
+      },
     },
   },
   methods: {
@@ -205,13 +233,30 @@ export default {
         this.lrcInfo.lrc = [];
       } else {
         // 歌词信息处理
-        this.lrcInfo = res.lrc.lyric.split("\n").map((item) => {
-          return {
-            // duration: item.slice(0, 11),
-            // 时间处理成秒
-            duration: item.slice(1, 3) * 60 + +item.slice(4, 10),
-            lrc: item.slice(11),
-          };
+        this.lrcInfo = res.lrc.lyric.split("\n").map((item, index) => {
+          // 判断 item 是否为最后一项  因为最后一项时间为空 处理会报错
+          if (index < res.lrc.lyric.split("\n").length - 1) {
+            return {
+              // duration: item.slice(0, 11),
+              // 时间处理成秒
+              // duration: item.slice(1, 3) * 60 + +item.slice(4, 10),
+              // 用正则匹配出时间 转换成秒
+              duration:
+                item.match(/^\[+([0-5][0-9]):([0-5][0-9]\.[0-9][0-9]+)\]/)[1] *
+                  60 +
+                +item.match(/^\[+([0-5][0-9]):([0-5][0-9]\.[0-9][0-9]+)\]/)[2],
+
+              lrc: item
+                .split(/\s*\n*\[.*?\]\s*/)
+                .filter((v) => !!v)
+                .join(""),
+            };
+          } else {
+            return {
+              duration: null,
+              lrc: "",
+            };
+          }
         });
         // console.log(this.lrcInfo);
       }
@@ -345,6 +390,7 @@ export default {
     transform: translateX(-50%);
     margin: 20px 0;
     color: #7e7e7e;
+    transition: all 0.2s;
     // height: 260px;
     p {
       line-height: 35px;

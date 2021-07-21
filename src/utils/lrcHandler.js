@@ -34,7 +34,7 @@ export function handlerLrcSco(lrcWrop, slide, lrc, callback) {
         // 阻止默认事件与冒泡
         e.stopPropagation()
         e.preventDefault()
-       // 滚动时获取歌词高度
+       // 滚动时获取歌词高度 40为元素的上下 margin
         let lrcHeight = lrc.clientHeight + 40
         // 如果滑块向下滚动
         if (e.wheelDeltaY < 0) {
@@ -60,8 +60,4 @@ export function handlerLrcSco(lrcWrop, slide, lrc, callback) {
         // 通过回调传参
         callback(lrcHeight)
     });
-}
-
-export function lrcscroll() {
-    
 }
