@@ -34,8 +34,8 @@
               </p>
             </div>
             <div class="s_icon">
-              <i class="iconfont icon-jiantou"></i>
-              <i class="iconfont icon-tianjia"></i>
+              <i class="iconfont icon-jiantou" @click="playAudio(item1.id)"></i>
+              <i class="iconfont icon-tianjia" @click ='savePlayAudioId(item1.id)'></i>
             </div>
           </li>
         </ul>
@@ -68,7 +68,7 @@ export default {
     return {};
   },
   methods: {
-    ...mapMutations(["playListIdMutations", "singerIdMutations",'SongIdMutations']),
+    ...mapMutations(["playListIdMutations", "singerIdMutations",'SongIdMutations','musicUrlMutations','musicPlayListId']),
     // 存储歌单 id 并跳转至歌单详情
     getPlaylistId(id) {
       this.playListIdMutations(id);
@@ -86,6 +86,19 @@ export default {
         this.SongIdMutations(id);
         window.sessionStorage.setItem('songId',JSON.stringify(id))
         this.$router.go(0)
+    },
+     // 点击播放按钮播放歌曲
+    playAudio(id){
+       // 存储当前音乐 id
+      this.musicUrlMutations(id);
+      // 通过事件总线触发播放条的 播放事件
+      this.$bus.$emit("onPlay");
+    },
+    // 点击加号 加入到播放列表
+    savePlayAudioId(id){
+      this.musicPlayListId(id)
+      // 更新播放列表
+      this.$bus.$emit('addMusic')
     }
   },
 };

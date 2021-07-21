@@ -1,18 +1,19 @@
 <template>
-  <div class="wrop">
-    <div class="r_s_wrop">
-      <div class="lock"></div>
+  <div class="wrop" @mouseenter="touchPlayBar" @mouseleave="leavePlayBar">
+    <div class="r_s_wrop" >
+      <a href="#" class="lock" @click.prevent
+      ="lock"></a>
     </div>
     <el-row>
       <el-col :offset="2" :span="20">
         <div class="contain">
           <div class="left-p">
             <!-- 上一首 -->
-            <div class="left-p-l"></div>
+            <div class="left-p-l" @click="preSong"></div>
             <!-- 播放 -->
             <div class="left-p-m" @click="playAudio"></div>
             <!-- 下一首 -->
-            <div class="left-p-r"></div>
+            <div class="left-p-r" @click="nextSong"></div>
           </div>
           <div class="mid-p">
             <img :src="songsDet.al.picUrl" alt="" />
@@ -60,15 +61,29 @@
             <a title="分享"></a>
           </div>
           <div class="right-p-r">
-            <a></a>
+            <a @click="clickAudio">
+              <!-- 声音滑块 -->
+              <el-slider
+                class="audio-slider"
+                v-model="audioValue"
+                :show-tooltip="false"
+                :vertical="true"
+                height="100px"
+                @change="changeAudio"
+                v-show="audioShow"
+              ></el-slider>
+            </a>
             <a title="循环"></a>
-            <a title="播放列表" @click="close"><i>{{$store.state.musicPlayListId.length}}</i></a>
+            <a title="播放列表" @click="close"
+              ><i>{{ $store.state.musicPlayListId.length }}</i></a
+            >
           </div>
           <!-- 播放列表 -->
           <music-playlist
             class="m-playlist"
             @closeDialog="close"
             v-show="isShow"
+            :duration="duration"
           ></music-playlist>
           <!-- 音频 -->
           <audio
@@ -77,7 +92,6 @@
             ref="audioRef"
             @timeupdate="updateTime"
             @ended="playOver"
-           
           ></audio>
         </div>
       </el-col>
@@ -87,7 +101,6 @@
     
 <script>
 import { mapMutations } from "vuex";
-import { getSongsDet } from "../../network/Sing"; // 歌曲详情 网络请求
 import MusicPlaylist from "./MusicPlaylist.vue"; // 引入播放列表组件
 
 export default {
@@ -108,13 +121,25 @@ export default {
       },
       // 音频时长
       duration: null,
-      // 添加 audio 实现自动播放
-      // condition: false
+      // 声音控制滑块显示与隐藏
+      audioShow: false,
+      // 声音 大小
+      audioValue: 50,
+      // 控制播放条小锁状态
+      lockStatus: false,
     };
   },
   created() {
     this.getSongDet();
   },
+ mounted() {
+   // 让播放条在页面刷新未锁定时显示 鼠标发生滚动则未锁定就隐藏 随后立即删除滚动事件
+   document.onmousewheel = () => {
+    //  console.log('666')
+     this.leavePlayBar()
+     document.onmousewheel = null
+   }
+ },
   methods: {
     ...mapMutations(["musicUrlMutations"]),
     // 格式化滑块值
@@ -140,31 +165,31 @@ export default {
           reject(err);
         })
           .then(() => {
+            // 播放歌曲
             songAudio.play();
-
+            // 更新页面歌曲信息
+            this.getSongDet();
             this.play = false;
           })
           .catch((err) => err);
-          // 传递事件给 播放列表组件 控制歌词播放
-          this.$bus.$emit('onPlayLrc')
       } else {
         // 按钮变为播放
         document.querySelector(".left-p-m").style.backgroundPosition =
           "0 -204px";
         songAudio.pause();
         this.play = true;
-        // 传递事件给 播放列表组件 控制歌词播放
-          this.$bus.$emit('onPlayLrc')
       }
     },
 
     // 获取当前歌曲详情
     getSongDet() {
       // 获取到音乐 id 后才能获取到歌曲详情
-      this.musicUrlMutations(
-        JSON.parse(window.localStorage.getItem("musicUrl")).id
-      );
-      this.songsDet = this.$store.state.currentMusicInfo;
+      if (this.$store.state.musicUrl.id !== "") {
+        this.musicUrlMutations(
+          JSON.parse(window.localStorage.getItem("musicUrl")).id
+        );
+        this.songsDet = this.$store.state.currentMusicInfo;
+      }
     },
 
     // 播放事件
@@ -173,18 +198,17 @@ export default {
       if (!this.flag) {
         // 获取音频时长
         this.duration = this.$refs.audioRef.duration;
+        // console.log(this.duration)
         // 当前时间动态赋值给滑块
         this.playValue = this.$refs.audioRef.currentTime;
         // console.log(this.playValue)
         // 将当前歌曲时间传给 播放列表
-        this.$bus.$emit('currentTime',this.$refs.audioRef.currentTime)
+        this.$bus.$emit("currentTime", this.$refs.audioRef.currentTime);
       }
       // 播放完毕 playValue 重置
       if (parseInt(this.playValue) === parseInt(this.$refs.audioRef.duration)) {
         this.playValue = 0;
       }
-
-      
     },
 
     // 播放结束事件
@@ -199,15 +223,97 @@ export default {
       this.playValue = value;
     },
 
-    // 切换播放
+    // 点击页面中播放按钮 切换播放
     togglePlay() {
       // console.log(this)
       // 通过时间总线拿到其他组件发送的事件
-      this.$bus.$on('onPlay',() => {
+      this.$bus.$on("onPlay", () => {
         // console.log('666')
-        this.playAudio()
-      })
+        this.playAudio();
+      });
     },
+    // 点击上一首 切换播放
+    preSong() {
+      // 播放列表歌曲数量大于等于 2 才可操作
+      if (this.$store.state.musicPlayListId.length > 1) {
+        // 当前歌曲不是第一首歌才可进行操作
+        if (
+          this.$store.state.musicUrl.id != this.$store.state.musicPlayListId[0]
+        ) {
+          // console.log(this.$store.state.musicUrl.id);
+          // console.log(this.$store.state.musicPlayListId[0]);
+          // console.log(this.$store.state.musicPlayListId.indexOf(
+          //     +this.$store.state.musicUrl.id,
+          //   ))
+          // 上一首歌曲在播放列表的下标
+          let index =
+            this.$store.state.musicPlayListId.indexOf(
+              this.$store.state.musicUrl.id
+            ) - 1;
+          this.musicUrlMutations(this.$store.state.musicPlayListId[index]);
+          this.play = true;
+          this.playAudio();
+        }
+      }
+    },
+    // 点击下一首 切换播放
+    nextSong() {
+      // 播放列表歌曲数量大于等于 2 才可操作
+      if (this.$store.state.musicPlayListId.length > 1) {
+        // 当前歌曲不是最后一首歌 才可进行操作
+        if (
+          this.$store.state.musicUrl.id !=
+          this.$store.state.musicPlayListId[
+            this.$store.state.musicPlayListId.length - 1
+          ]
+        ) {
+          // 下一首歌曲在播放列表的下标
+          let index =
+            this.$store.state.musicPlayListId.indexOf(
+              this.$store.state.musicUrl.id
+            ) + 1;
+          this.musicUrlMutations(this.$store.state.musicPlayListId[index]);
+          this.play = true;
+          this.playAudio();
+        }
+      }
+    },
+    // 点击声音按钮事件
+    clickAudio() {
+      // console.log('666')
+      this.audioShow = !this.audioShow;
+    },
+    // 改变音量大小事件
+    changeAudio() {
+      document.querySelector("audio").volume = this.audioValue / 100;
+    },
+    // 点击播放条小锁事件
+    lock() {
+      if (this.lockStatus) {
+        document.querySelector(".lock").style.backgroundPosition =
+          "-80px -380px";
+          this.lockStatus = false
+      }else{
+        document.querySelector(".lock").style.backgroundPosition = 
+        "-100px -400px"
+        this.lockStatus = true
+      }
+    },
+    // 触碰播放条显示
+    touchPlayBar(){
+      document.querySelector('.wrop').style.bottom = '0'
+    },
+    // 离开播放条事件
+    leavePlayBar(){
+      // console.log('666')
+      // 判断小锁状态 锁住或者播放列表打开播放条则显示 否则隐藏
+      if(this.lockStatus || this.isShow){
+        document.querySelector(".wrop").style.bottom = '0'
+      }else{
+        document.querySelector(".wrop").style.bottom = '-45px'
+      }
+    }
+
   },
   computed: {},
   components: {
@@ -232,11 +338,11 @@ export default {
   left: 17px;
   width: 18px;
   height: 18px;
+  text-decoration: none;
   background: url("../../assets/playbar.png") no-repeat;
-  background-position: -100px -380px;
+  background-position: -80px -380px;
   &:hover {
     background-position: -100px -400px;
-    cursor: pointer;
   }
 }
 .wrop {
@@ -246,6 +352,7 @@ export default {
   width: 100%;
   height: 53px;
   background: url("../../assets/playbar.png") repeat-x;
+  transition: all .5s;
   .contain {
     display: flex;
     justify-content: space-between;
@@ -400,12 +507,19 @@ export default {
     a {
       margin: 0 2px;
     }
+
     a:first-child {
+      position: relative;
       display: inline-block;
       width: 25px;
       height: 25px;
       background: url("../../assets/playbar.png") no-repeat;
       background-position: -2px -248px;
+      .audio-slider {
+        position: absolute;
+        top: -110px;
+        left: -6px;
+      }
       &:hover {
         background-position: -31px -248px;
         cursor: pointer;

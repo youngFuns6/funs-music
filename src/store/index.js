@@ -112,7 +112,14 @@ export default new Vuex.Store({
     musicPlayListId(state, id) {
       // 如果音乐播放列表有该歌曲则不进行 push
       if (state.musicPlayListId.indexOf(id) === -1) {
-        state.musicPlayListId.push(id)
+        // 判断 push 的 id 是否为数组对象   或者数字 id   分类 push
+        // console.log(typeof id)
+        if (typeof id === 'object') {
+          state.musicPlayListId.push(...id)
+        } else if (typeof id === 'number'){
+          state.musicPlayListId.push(id)
+        }
+        
       }
       window.localStorage.setItem('musicPlayListId', JSON.stringify(state.musicPlayListId))
     },
@@ -121,6 +128,11 @@ export default new Vuex.Store({
     updataMusicPlayListId(state,arr) {
       state.musicPlayListId = arr
     },
+
+    // 清空音乐播放列表
+    clearPlaylist(state) {
+      state.musicPlayListId = []
+    }
 
     
 

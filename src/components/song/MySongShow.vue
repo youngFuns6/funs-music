@@ -24,7 +24,7 @@
             </span>
           </p>
           <!-- 四个按钮 -->
-          <det-btn :totalAttr='playListCommentsAttr.total'></det-btn>
+          <det-btn :totalAttr='playListCommentsAttr.total' :playListInfoAttr='playListInfoAttr'></det-btn>
           <!-- 歌单描述 -->
           <div class="list-dec">
             <div>
@@ -105,7 +105,6 @@
 <script>
 import DetBtn from './DetBtn.vue' // 四个按钮
 import { mapMutations } from "vuex";
-import {getSongUrl} from '../../network/Sing'
 export default {
   name: "MySongShow",
   props: {
@@ -152,7 +151,7 @@ export default {
       this.$router.push('/songs/detail')
     },
     // 点击播放图标 播放歌曲
-    async saveAudio(id){
+     saveAudio(id){
       // 存储当前音乐 id
       this.musicUrlMutations(id)
       // console.log(res.data)

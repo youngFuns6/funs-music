@@ -44,7 +44,7 @@
                 ></el-table-column>
                 <el-table-column width="200px">
                   <template #default="scope">
-                    <i class="iconfont icon-hm_video_light"></i>
+                    <i class="iconfont icon-hm_video_light" @click="playAudio(scope.row.id)"></i>
                     <i class="iconfont icon-chakanMV" v-if="scope.row.mv"></i>
                   </template>
                 </el-table-column>
@@ -170,7 +170,7 @@ export default {
       this.singerInfo = res.artist;
     },
     // vuex 歌手 id 处理函数
-    ...mapMutations(["albumIdMutations","SongIdMutations"]),
+    ...mapMutations(["albumIdMutations","SongIdMutations","musicUrlMutations"]),
     // 点击专辑跳转至专辑详情页
     saveAlbumId(id) {
       // 储存专辑 id 到 vuex
@@ -233,6 +233,14 @@ export default {
         this.getSingerDescRef();
       }
     },
+
+    // 点击播放按钮播放歌曲
+    playAudio(id){
+       // 存储当前音乐 id
+      this.musicUrlMutations(id);
+      // 通过事件总线触发播放条的 播放事件
+      this.$bus.$emit("onPlay");
+    }
   },
 };
 </script>

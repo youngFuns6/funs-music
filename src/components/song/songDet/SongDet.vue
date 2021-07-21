@@ -34,7 +34,7 @@
                 }}</span>
               </p>
               <!-- 按钮 -->
-              <det-btn :totalAttr="songComments.total"></det-btn>
+              <det-btn :totalAttr="songComments.total" :songDet='songDet'></det-btn>
               <!-- 歌词 -->
               <div :class="className">
                 <div  v-html="lrc"></div>

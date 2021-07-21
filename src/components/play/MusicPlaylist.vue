@@ -4,7 +4,10 @@
       <div class="g_header">
         <div class="header-l">
           <span>播放列表{{ playMusicList.length }}</span>
-          <span><i class="iconfont icon-shanchu"></i> <i>清除</i></span>
+          <span
+            ><i class="iconfont icon-shanchu" @click="clearList"></i>
+            <i @click="clearList">清除</i></span
+          >
         </div>
         <div class="header-r">
           <span>{{ currentName }}</span>
@@ -19,14 +22,19 @@
             :key="item1.id"
             :class="[item1.id == $store.state.musicUrl.id ? 'add-class' : '']"
           >
-            <span class="s_name">{{ item1.name }}</span>
+            <!-- 歌曲名 -->
+            <span class="s_name" @click="clickPlaySong(item1.id)">{{
+              item1.name
+            }}</span>
             <div class="d_box">
               <div class="d_con">
+                <!-- 歌手名 -->
                 <span
                   class="e_name"
                   v-for="(item2, index) in item1.ar"
                   :key="item2.id"
                   :title="item2.name"
+                  @click="savesingerId(item2.id)"
                 >
                   {{ item2.name }}
                   <i>{{ index === item1.ar.length - 1 ? "" : "/" }}</i>
@@ -61,9 +69,13 @@
 <script>
 import { getSongsDet, getLyric } from "../../network/Sing"; // 歌曲详情 网络请求
 import { handlerSlide, handlerLrcSco } from "../../utils/lrcHandler"; // 引入滑块相关处理函数
+import { mapActions, mapMutations } from "vuex";
 export default {
   name: "MusicPlaylist",
-  props: {},
+  props: {
+    // 歌曲时长
+    duration: null,
+  },
   data() {
     return {
       musicUrl: this.$store.state.musicUrl,
@@ -82,31 +94,29 @@ export default {
       ],
       // 当前歌词行高亮类名
       active: 0,
-
-      // 控制歌词播放
-      // playLrc: false
+      // 当前歌曲时间
+      currentTime: null,
     };
   },
-  updated() {},
+
   created() {
+    // console.log(this.$store.state.musicUrl)
     //  当前歌曲名
-    getSongsDet(this.$store.state.musicUrl.id).then((res) => {
-      this.currentName = res.data.songs[0].name;
-    });
-    this.getPlayMusicLrc();
-    this.getPlayMusicList();
-    // 播放条点击播放传递的事件
-    this.$bus.$on("onPlayLrc", () => {});
-  },
-  mounted() {
-    this.$nextTick(() => {
-      // console.log(this.$refs.lrcRef.dataset.index);
-      // 歌词高亮到第四行开始滚动
-      if (parseInt(this.$refs.lrcRef) === 4) {
-        document.querySelector("lrc_c").style.top = "-35px";
-      }
+    if (this.$store.state.musicUrl.id !== "") {
+      getSongsDet(this.$store.state.musicUrl.id).then((res) => {
+        this.currentName = res.data.songs[0].name;
+      });
+      this.getPlayMusicLrc();
+      this.getPlayMusicList();
+    }
+
+    // 点击其余页面加入歌曲按钮 更新播放列表
+    this.$bus.$on("addMusic", () => {
+      // console.log('999')
+      this.getPlayMusicList();
     });
   },
+
   watch: {
     musicUrl: {
       handler() {
@@ -118,7 +128,7 @@ export default {
         this.getPlayMusicList();
       },
       deep: true,
-      immediate: true,
+      // immediate: true,
     },
     lrcInfo: {
       // 监听歌词变化 处理滑块高度 歌词滚动
@@ -156,19 +166,28 @@ export default {
         // 实时监听当前播放时间 给当前歌词添加 高亮
         this.$bus.$on("currentTime", (value) => {
           // console.log(value);
+          // 保存当前歌曲时间
+          this.currentTime = value;
           // this.playTime = value;
           // 存储每次循环满足歌词时间小于当前时间的 index
           let arr = [];
           this.lrcInfo.forEach((item, index) => {
             // 如果歌词时间小于等于播放时间 则当前行高亮
             if (parseInt(item.duration) <= value) {
-              // console.log(index)
               arr.push(index);
 
               //   数组最后一个 为当前高亮行
               this.active = arr[arr.length - 1];
               // console.log(arr);
             }
+            // 判断播放歌曲是否结束 重置歌词及滑块位置
+            // console.log(this.duration)
+            // console.log(this.currentTime)
+            // if (this.duration == this.currentTime) {
+            //   console.log('666')
+            //   document.querySelector(".s-scorll-r").style.top = 0
+            //   document.querySelector("lrc_c").style.top = 0;
+            // }
           });
         });
       },
@@ -177,14 +196,7 @@ export default {
     active: {
       // 监听歌词变化 实现歌词自动滚动
       handler() {
-        // let slide = document.querySelector(".s-scorll-r");
-        // // 整个歌词高度
-        // let lrcHeight = document.querySelector('.lrc_c').clientHeight
-        // // 歌词容器高度
-        // let wropHeight = 260;
-        // handlerSlide(slide,lrcHeight,wropHeight)
-        // console.log('666')
-
+        // console.log(this.duration)
         if (this.active >= 3 && this.active <= this.lrcInfo.length - 2) {
           let slide = document.querySelector(".s-scorll-r");
           // 整个歌词高度
@@ -198,7 +210,7 @@ export default {
           document.querySelector(".lrc_c").style.top =
             -35 * (this.active - 3) + "px";
           // 歌词上移 35px 滑块需下移 35/lrcHeight * 260
-          slide.style.top = (35 / lrcHeight) * 240  * (this.active - 3) + "px";
+          slide.style.top = (35 / lrcHeight) * 240 * (this.active - 3) + "px";
         }
       },
     },
@@ -215,9 +227,9 @@ export default {
         this.$store.state.musicPlayListId.join(",")
       );
       // console.log(res);
-      if (res.code !== 200) {
-        return this.$message.error("获取音乐播放列表失败");
-      }
+      // if (res.code !== 200) {
+      //   return this.$message.error("获取音乐播放列表失败");
+      // }
       this.playMusicList = res.songs;
     },
     // 获取歌词
@@ -260,6 +272,36 @@ export default {
         });
         // console.log(this.lrcInfo);
       }
+    },
+    ...mapMutations([
+      "musicUrlMutations",
+      "singerIdMutations",
+      "clearPlaylist",
+    ]),
+    // 点击播放列表歌曲名
+    clickPlaySong(id) {
+      // 存储当前音乐 id
+      this.musicUrlMutations(id);
+      // 通过事件总线触发播放条的 播放事件
+      this.$bus.$emit("onPlay");
+    },
+    // 点击歌手名 跳转至歌手详情
+    savesingerId(id) {
+      // 关闭播放列表
+      this.$emit("closeDialog");
+      this.singerIdMutations(id);
+      window.sessionStorage.setItem("songId", JSON.stringify(id));
+      this.$router.push("/singer/detail");
+    },
+    // 点击清空 清除列表
+    clearList() {
+      // console.log('666')
+      // 清空数据
+      this.clearPlaylist();
+      window.localStorage.removeItem("musicPlayListId");
+      window.localStorage.removeItem("musicUrl");
+      // 刷新列表
+      this.playMusicList = [];
     },
   },
 };
@@ -390,7 +432,7 @@ export default {
     transform: translateX(-50%);
     margin: 20px 0;
     color: #7e7e7e;
-    transition: all 0.2s;
+    transition: all 0.7s linear;
     // height: 260px;
     p {
       line-height: 35px;
@@ -415,7 +457,7 @@ export default {
       top: 0;
       right: 0;
       width: 4px;
-      height: 100px;
+      height: 50px;
       opacity: 0.8;
       border-radius: 5px;
       margin: 0;

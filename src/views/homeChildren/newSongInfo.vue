@@ -59,7 +59,7 @@
               </el-table-column>
               <el-table-column width="100">
                 <template #default="scope">
-                  <span class="iconfont icon-hm_video_light"></span>
+                  <span class="iconfont icon-hm_video_light" @click="playAudio(scope.row.id)"></span>
                   <el-tooltip
                     class="item"
                     effect="dark"
@@ -334,7 +334,7 @@ export default {
         })
         .catch((err) => err);
     },
-    ...mapMutations(['singerIdMutations','SongIdMutations']),
+    ...mapMutations(['singerIdMutations','SongIdMutations','musicUrlMutations']),
     // 点击歌手 存储歌手 id 并跳转至歌手详情
     getSingerId(id){
       this.singerIdMutations(id)
@@ -346,6 +346,13 @@ export default {
       this.SongIdMutations(id)
       window.sessionStorage.setItem('songId', JSON.stringify(id))
       this.$router.push('/songs/detail')
+    },
+    // 点击播放按钮 播放歌曲
+    playAudio(id){
+       // 存储当前音乐 id
+      this.musicUrlMutations(id);
+      // 通过事件总线触发播放条的 播放事件
+      this.$bus.$emit("onPlay");
     }
   },
 

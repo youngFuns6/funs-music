@@ -3,6 +3,10 @@
 // lrcHeight 真个歌词高度
 // wropHeight 歌词容器高度
 export function handlerSlide(slider, lrcHeight, wropHeight) {
+    // 判断 lrcHeight 高度为 0 给个初始值 因为不给初始值先点击播放再按显示播放列表按钮 此时会获取不到 lrcHeight 高度 导致滑块没有高度
+    if (lrcHeight == 0) {
+        lrcHeight = 500
+    }
     // 计算滑块高度
     let slideHeight = wropHeight / lrcHeight * wropHeight  + 'px';
     // 限定滑块高度范围
