@@ -45,7 +45,7 @@
 </template>
     
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations,mapActions } from "vuex";
 export default {
   name: "MoreSongs",
   props: {
@@ -69,28 +69,28 @@ export default {
   },
   methods: {
     ...mapMutations(["playListIdMutations", "singerIdMutations",'SongIdMutations','musicUrlMutations','musicPlayListId']),
+    ...mapActions(['getSongsDetActions']),
     // 存储歌单 id 并跳转至歌单详情
     getPlaylistId(id) {
       this.playListIdMutations(id);
-      window.sessionStorage.setItem("playListId", JSON.stringify(id));
       this.$router.push("/singlist/detail");
     },
     // 存储歌手 id 并跳转至歌手详情
     getSingerId(id) {
       this.singerIdMutations(id);
-      window.sessionStorage.setItem("singerId", JSON.stringify(id));
       this.$router.push("/singer/detail");
     },
     // 存储歌曲 id 并更新页面
     getSongId(id){
         this.SongIdMutations(id);
-        window.sessionStorage.setItem('songId',JSON.stringify(id))
         this.$router.go(0)
     },
      // 点击播放按钮播放歌曲
     playAudio(id){
        // 存储当前音乐 id
       this.musicUrlMutations(id);
+      // 获取播放音乐详情
+      this.getSongsDetActions(id)
       // 通过事件总线触发播放条的 播放事件
       this.$bus.$emit("onPlay");
     },

@@ -27,7 +27,7 @@
 </template>
     
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations,mapActions } from "vuex";
 export default {
   name: "DetBtn",
   props: {
@@ -53,6 +53,7 @@ export default {
   },
   methods: {
     ...mapMutations(["musicUrlMutations", "musicPlayListId"]),
+    ...mapActions(['getSongsDetActions']),
     // 点击播放按钮 播放歌曲
     playAudio() {
       // console.log(this.songDet.id === undefined)
@@ -62,6 +63,8 @@ export default {
       } else {
         // 存储当前音乐 id
         this.musicUrlMutations(this.songDet.id);
+        // 获取播放音乐详情
+      this.getSongsDetActions(this.songDet.id)
         // 通过事件总线触发播放条的 播放事件
         this.$bus.$emit("onPlay");
       }
@@ -81,6 +84,8 @@ export default {
         // console.log(...arr)
         // 调用播放列表音乐 id 处理函数
         this.musicPlayListId(arr);
+        // 获取播放音乐详情
+      this.getSongsDetActions(arr[0])
         // 存储第一首音乐 id  播放第一首歌曲
         this.musicUrlMutations(arr[0]);
         // 通过事件总线触发播放条的 播放事件

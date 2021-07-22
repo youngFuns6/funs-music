@@ -45,7 +45,7 @@
                 <el-table-column width="200px">
                   <template #default="scope">
                     <i class="iconfont icon-hm_video_light" @click="playAudio(scope.row.id)"></i>
-                    <i class="iconfont icon-chakanMV" v-if="scope.row.mv"></i>
+                    <i class="iconfont icon-chakanMV" v-if="scope.row.mv" @click="saveMvId(scope.row.mv)"></i>
                   </template>
                 </el-table-column>
                 <el-table-column label="歌曲" width="400px" class="s_name">
@@ -90,13 +90,13 @@
             <!-- 相关 MV -->
             <el-tab-pane label="相关MV">
               <ul class="u_mv">
-                <li v-for="item in mvs" :key="item.id">
+                <li v-for="item in mvs" :key="item.id" @click.prevent="saveMvId(item.id)">
                   <div class="mv_cover">
                     <img :src="item.imgurl" alt="" />
                   </div>
                   <a href="#" class="mask_mv"></a>
-                  <a href="#" class="icon_mv iconfont icon-bofang"></a>
-                  <p>{{ item.name }}</p>
+                  <a href="#" class="icon_mv iconfont icon-bofang" ></a>
+                  <p @click.prevent="saveMvId(item.id)">{{ item.name }}</p>
                 </li>
               </ul>
             </el-tab-pane>
@@ -127,7 +127,7 @@ import {
   getSingerMv,
   getSingerDesc,
 } from "../../network/singer"; // 歌手相关 网络请求
-import { mapMutations } from "vuex";
+import { mapMutations,mapActions } from "vuex";
 export default {
   name: "SingerDet",
   data() {
@@ -170,13 +170,12 @@ export default {
       this.singerInfo = res.artist;
     },
     // vuex 歌手 id 处理函数
-    ...mapMutations(["albumIdMutations","SongIdMutations","musicUrlMutations"]),
+    ...mapMutations(["albumIdMutations","SongIdMutations","musicUrlMutations","mvIdMutations"]),
+    ...mapActions(["getSongsDetActions"]),
     // 点击专辑跳转至专辑详情页
     saveAlbumId(id) {
       // 储存专辑 id 到 vuex
       this.albumIdMutations(id);
-      // 将歌手 id 存储到本地
-      window.sessionStorage.setItem("albumId", JSON.stringify(id));
       this.$router.push("/newSongInfo");
     },
     // 点击歌曲跳转至歌曲详情页
@@ -184,8 +183,6 @@ export default {
       // console.log(ids)
       // 存储歌曲 id 到 vuex
       this.SongIdMutations(ids)
-       // 将歌曲 id 存储到本地
-      window.sessionStorage.setItem("songId", JSON.stringify(ids));
       this.$router.push("/songs/Detail");
     },
     // 获取歌手专辑
@@ -238,10 +235,21 @@ export default {
     playAudio(id){
        // 存储当前音乐 id
       this.musicUrlMutations(id);
+      // 获取播放音乐详情
+      this.getSongsDetActions(id)
       // 通过事件总线触发播放条的 播放事件
       this.$bus.$emit("onPlay");
-    }
+    },
+    
+    // 点击 mv 储存当前 mv id
+    saveMvId(id){
+      this.mvIdMutations(id)
+      // 跳转至 mv 详情
+      this.$router.push('/mvdet')
+    },
+    
   },
+
 };
 </script>
     

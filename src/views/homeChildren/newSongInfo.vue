@@ -67,7 +67,7 @@
                     placement="bottom-end"
                     :enterable="false"
                   >
-                    <span class="iconfont icon-chakanMV" v-show="scope.row.mv">
+                    <span class="iconfont icon-chakanMV" v-show="scope.row.mv" @click="saveMvId(scope.row.mv)">
                     </span>
                   </el-tooltip>
                 </template>
@@ -158,7 +158,7 @@
 import { getNewSongInfo, getAlbumDet, getSimiSinger } from "../../network/Sing";
 import { getAlbumComment } from "../../network/comment";
 import AlbumComent from "../../components/coments/AlbumComent.vue"; // 导入专辑评论组件
-import {mapMutations} from 'vuex'
+import {mapMutations, mapActions} from 'vuex'
 
 export default {
   name: "newSongInfo",
@@ -334,25 +334,31 @@ export default {
         })
         .catch((err) => err);
     },
-    ...mapMutations(['singerIdMutations','SongIdMutations','musicUrlMutations']),
+    ...mapMutations(['singerIdMutations','SongIdMutations','musicUrlMutations','mvIdMutations']),
+    ...mapActions(['getSongsDetActions']),
     // 点击歌手 存储歌手 id 并跳转至歌手详情
     getSingerId(id){
       this.singerIdMutations(id)
-      window.sessionStorage.setItem('songId', JSON.stringify(id))
       this.$router.push('/singer/detail')
     },
     // 点击歌曲 存储歌曲 id 并跳转至歌曲详情
     getSongId(id){
       this.SongIdMutations(id)
-      window.sessionStorage.setItem('songId', JSON.stringify(id))
       this.$router.push('/songs/detail')
     },
     // 点击播放按钮 播放歌曲
     playAudio(id){
        // 存储当前音乐 id
       this.musicUrlMutations(id);
+      // 获取播放音乐详情
+      this.getSongsDetActions(id)
       // 通过事件总线触发播放条的 播放事件
       this.$bus.$emit("onPlay");
+    },
+    // 点击 mv 按钮 跳转至 mv 详情
+    saveMvId(id){
+      this.mvIdMutations(id)
+      this.$router.push('/mvdet')
     }
   },
 

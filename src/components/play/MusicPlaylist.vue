@@ -98,7 +98,34 @@ export default {
       currentTime: null,
     };
   },
+  mounted() {
+      this.$bus.$on("currentTime", (value) => {
+          // console.log(value);
+          // 保存当前歌曲时间
+          this.currentTime = value;
+          // this.playTime = value;
+          // 存储每次循环满足歌词时间小于当前时间的 index
+          let arr = [];
+          this.lrcInfo.forEach((item, index) => {
+            // 如果歌词时间小于等于播放时间 则当前行高亮
+            if (parseInt(item.duration) <= value) {
+              arr.push(index);
 
+              //   数组最后一个 为当前高亮行
+              this.active = arr[arr.length - 1];
+              // console.log(arr);
+            }
+            // 判断播放歌曲是否结束 重置歌词及滑块位置
+            // console.log(this.duration)
+            // console.log(this.currentTime)
+            if (this.duration == this.currentTime) {
+              // console.log('666')
+              document.querySelector(".s-scorll-r").style.top = 0
+              document.querySelector(".lrc_c").style.top = 0;
+            }
+          });
+        });
+  },
   created() {
     // console.log(this.$store.state.musicUrl)
     //  当前歌曲名
@@ -116,7 +143,6 @@ export default {
       this.getPlayMusicList();
     });
   },
-
   watch: {
     musicUrl: {
       handler() {
@@ -160,38 +186,6 @@ export default {
       },
       deep: true,
       // immediate: true
-    },
-    playTime: {
-      handler() {
-        // 实时监听当前播放时间 给当前歌词添加 高亮
-        this.$bus.$on("currentTime", (value) => {
-          // console.log(value);
-          // 保存当前歌曲时间
-          this.currentTime = value;
-          // this.playTime = value;
-          // 存储每次循环满足歌词时间小于当前时间的 index
-          let arr = [];
-          this.lrcInfo.forEach((item, index) => {
-            // 如果歌词时间小于等于播放时间 则当前行高亮
-            if (parseInt(item.duration) <= value) {
-              arr.push(index);
-
-              //   数组最后一个 为当前高亮行
-              this.active = arr[arr.length - 1];
-              // console.log(arr);
-            }
-            // 判断播放歌曲是否结束 重置歌词及滑块位置
-            // console.log(this.duration)
-            // console.log(this.currentTime)
-            // if (this.duration == this.currentTime) {
-            //   console.log('666')
-            //   document.querySelector(".s-scorll-r").style.top = 0
-            //   document.querySelector("lrc_c").style.top = 0;
-            // }
-          });
-        });
-      },
-      immediate: true,
     },
     active: {
       // 监听歌词变化 实现歌词自动滚动

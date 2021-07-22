@@ -65,7 +65,7 @@
         <el-table-column type="index" width="100">
           <template #default="scope">
             <i class="iconfont icon-hm_video_light" @click="saveAudio(scope.row.id)"></i>
-            <i class="iconfont icon-chakanMV" v-show="scope.row.mv"></i>
+            <i class="iconfont icon-chakanMV" v-show="scope.row.mv" @click="saveMvId(scope.row.mv)"></i>
           </template>
         </el-table-column>
         <el-table-column label="歌曲标题" width="180">
@@ -104,7 +104,7 @@
     
 <script>
 import DetBtn from './DetBtn.vue' // 四个按钮
-import { mapMutations } from "vuex";
+import { mapMutations,mapActions } from "vuex";
 export default {
   name: "MySongShow",
   props: {
@@ -128,35 +128,38 @@ export default {
   },
   methods: {
     // 引入 vuex 中函数
-    ...mapMutations(["albumIdMutations",'singerIdMutations','SongIdMutations','musicUrlMutations', 'onPlayMutations']),
-
+    ...mapMutations(["albumIdMutations",'singerIdMutations','SongIdMutations','musicUrlMutations', 'onPlayMutations','mvIdMutations']),
+    ...mapActions(["getSongsDetActions"]),
     // 点击专辑跳转至专辑详情页面
     toggleNewSongInfo(id) {
       this.$router.push("/newSongInfo");
       this.albumIdMutations(id);
       // console.log(id)
-      // 将 新碟 id 保存至本地
-      window.sessionStorage.setItem("albumId", JSON.stringify(id));
     },
      // 点击歌手 存储歌手 id 并跳转至歌手详情
     getSingerId(id){
       this.singerIdMutations(id)
-      window.sessionStorage.setItem('songId', JSON.stringify(id))
       this.$router.push('/singer/detail')
     },
     // 点击歌曲 存储歌曲 id 并跳转至歌曲详情
     getSongId(id){
       this.SongIdMutations(id)
-      window.sessionStorage.setItem('songId', JSON.stringify(id))
       this.$router.push('/songs/detail')
     },
     // 点击播放图标 播放歌曲
      saveAudio(id){
       // 存储当前音乐 id
       this.musicUrlMutations(id)
+      // 获取播放音乐详情
+      this.getSongsDetActions(id)
       // console.log(res.data)
       // 通过事件总线触发播放条的 播放事件
       this.$bus.$emit('onPlay')
+    },
+    // 点击 mv 按钮跳转至 mv 详情
+    saveMvId(id){
+      this.mvIdMutations(id)
+      this.$router.push('/mvdet')
     }
   },
   components: {

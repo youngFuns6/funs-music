@@ -6,12 +6,13 @@ import MyMusic from '../views/home/MyMusic.vue'
 import Home from '../views/home/Home.vue'
 import Singer from '../views/home/Singer.vue'
 import SingList from '../views/home/SingList.vue'
-import Mv from '../views/home/Mv.vue'
+import MvDet from '../components/mv/MvDet.vue'
 import newSongInfo from '../views/homeChildren/newSongInfo.vue'
 import SingListDet from '../views/singListChildren/SingListDet.vue'
 import SingerDet from '../components/singer/SingerDet.vue'
 import SongDet from '../components/song/songDet/SongDet.vue'
 import ToLogin from '../views/ToLogin.vue'
+import Rank from '../views/home/Rank.vue'
 
 
 
@@ -37,7 +38,8 @@ const routes = [
       { path: '/singer/detail', component: SingerDet },
       { path: '/songs/detail', component: SongDet },
       { path: '/login', component:  ToLogin},
-      { path: '/mv', component: Mv }
+      { path: '/mvdet', component: MvDet },
+      { path: '/rank', component: Rank}
     ],
 
   },

@@ -38,9 +38,9 @@
                 >歌单</router-link
               ></el-menu-item
             >
-            <el-menu-item index="/mv"
-              ><router-link to="/mv" tag="div" class="link-div"
-                >MV</router-link
+            <el-menu-item index="/rank"
+              ><router-link to="/rank" tag="div" class="link-div"
+                >排行</router-link
               ></el-menu-item
             >
           </el-menu>
@@ -94,8 +94,8 @@
       @ctrLoginBtn="ctrLogin"
     ></login-dialog>
 
-   <!-- 播放控件 -->
-   <play-bar v-show="PlayBarIsShow" class="play-bar"></play-bar>
+    <!-- 播放控件 -->
+    <play-bar v-show="PlayBarIsShow" class="play-bar"></play-bar>
   </div>
 </template>
     
@@ -105,7 +105,7 @@ import Search from "../headers/serach/Search.vue"; // 导入搜索框组件
 import userInfo from "./userInfo/userInfo.vue"; // 导入用户详情信息组件
 import { getUserInfo, getQuit } from "../../network/login"; // 用户详情信息 网络请求
 import newSongInfo from "../../views/homeChildren/newSongInfo.vue"; // 新碟详情组件
-import PlayBar from '../play/PlayBar.vue' // 引入播放控件
+import PlayBar from "../play/PlayBar.vue"; // 引入播放控件
 import { removeCookie } from "../../utils/cookie";
 
 export default {
@@ -128,7 +128,7 @@ export default {
       // 退出按钮隐藏与显示
       isButton: false,
       // 播放控件 显示与隐藏
-      PlayBarIsShow:true
+      PlayBarIsShow: true,
     };
   },
 
@@ -220,7 +220,7 @@ export default {
     userInfo,
     Search,
     newSongInfo,
-    PlayBar
+    PlayBar,
   },
 };
 </script>
@@ -229,6 +229,7 @@ export default {
 .container {
   height: 69px;
   background-color: #545c64;
+  height: 100%;
 }
 
 h1 {

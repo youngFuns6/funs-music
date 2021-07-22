@@ -148,7 +148,7 @@ export default {
       }
       this.playListComments = res;
       // 超 5000 评论 获取下一页数据
-      if(this.total > 5000){
+      if(res.total > 5000){
         this.queryInfo.before = res.comments[res.comments.length - 1].time
       }
     },

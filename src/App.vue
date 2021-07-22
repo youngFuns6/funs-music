@@ -1,5 +1,11 @@
 <template>
-  <div id="app">
+  <div id="app" class="contain-top">
+    <!-- 回到顶部 -->
+    <el-backtop target=".contain-top" :bottom='80'>
+      <div>
+        <i class="iconfont icon-huidaodingbu"></i>
+      </div>
+    </el-backtop>
     <router-view></router-view>
   </div>
 </template>
@@ -12,7 +18,7 @@ export default {
 
     // 获取本地专辑 id
     this.albumIdMutations(JSON.parse(window.sessionStorage.getItem("albumId")));
-    
+
     // 获取本地歌手 id
     this.singerIdMutations(
       JSON.parse(window.sessionStorage.getItem("singerId"))
@@ -31,9 +37,7 @@ export default {
 
     // 获取本地 当前播放音乐地址
     if (window.localStorage.getItem("musicUrl")) {
-      this.updataMusicUrl(
-        JSON.parse(window.localStorage.getItem("musicUrl"))
-      );
+      this.updataMusicUrl(JSON.parse(window.localStorage.getItem("musicUrl")));
     }
 
     // 获取本地音乐播放列表 歌曲 id
@@ -41,6 +45,18 @@ export default {
       this.updataMusicPlayListId(
         JSON.parse(window.localStorage.getItem("musicPlayListId"))
       );
+    }
+
+    // 获取本地当前播放歌曲详情
+    if (window.localStorage.getItem("currentMusicInfo")) {
+      this.songDetMutations(
+        JSON.parse(window.localStorage.getItem("currentMusicInfo"))
+      );
+    }
+
+    // 获取本地 mv id
+    if (window.sessionStorage.getItem("mvId")) {
+      this.mvIdMutations(JSON.parse(window.sessionStorage.getItem("mvId")));
     }
 
     // 获取本地当前导航菜单的 index
@@ -59,11 +75,20 @@ export default {
       "playListIdMutations",
       "SongIdMutations",
       "updataMusicUrl",
-      "updataMusicPlayListId"
+      "updataMusicPlayListId",
+      "mvIdMutations",
+      "songDetMutations",
     ]),
   },
 };
 </script>
 
 <style lang="less">
+.contain-top {
+  height: 100%;
+  overflow-x: hidden;
+}
+.icon-huidaodingbu {
+  font-size: 50px !important;
+}
 </style>

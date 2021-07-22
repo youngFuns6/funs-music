@@ -25,7 +25,7 @@
             <!-- 内容 -->
             <div class="content">
               <ul>
-                <li v-for="item in playList" :key="item.id">
+                <li v-for="(item,i) in playList" :key="i">
                   <a href="#" @click.prevent="toPlayListDet(item.id)"
                     ><img :src="item.coverImgUrl" alt=""
                   /></a>

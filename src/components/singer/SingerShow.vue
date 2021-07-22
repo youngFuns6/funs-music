@@ -58,8 +58,6 @@ export default {
     saveSingerId(id){
       this.singerIdMutations(id)
       // console.log(this.$store.state.singerId)
-      // 将歌手 id 存储到本地
-      window.sessionStorage.setItem('singerId',JSON.stringify(id))
       this.$router.push('/singer/detail')
     }
   },

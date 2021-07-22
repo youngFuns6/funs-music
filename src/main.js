@@ -36,6 +36,7 @@ import {
   Tabs,
   TabPane,
   Slider,
+  Backtop,
 
 } from 'element-ui'
 
@@ -62,6 +63,7 @@ Vue.use(Tag)
 Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Slider)
+Vue.use(Backtop)
 
 
 

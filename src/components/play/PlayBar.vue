@@ -1,8 +1,7 @@
 <template>
   <div class="wrop" @mouseenter="touchPlayBar" @mouseleave="leavePlayBar">
-    <div class="r_s_wrop" >
-      <a href="#" class="lock" @click.prevent
-      ="lock"></a>
+    <div class="r_s_wrop">
+      <a href="#" class="lock" @click.prevent="lock"></a>
     </div>
     <el-row>
       <el-col :offset="2" :span="20">
@@ -16,11 +15,11 @@
             <div class="left-p-r" @click="nextSong"></div>
           </div>
           <div class="mid-p">
-            <img :src="songsDet.al.picUrl" alt="" />
+            <img :src="songsDet.al.picUrl" alt="" @click="saveSongId" />
             <div class="m_wr">
               <p>
                 <!-- 歌名 -->
-                <span>{{ songsDet.name }} </span>
+                <span @click="saveSongId">{{ songsDet.name }} </span>
                 <i
                   class="iconfont icon-chakanMV m_wr_mv"
                   v-if="songsDet.mv"
@@ -31,7 +30,7 @@
                     class="m_wr_s_i"
                     v-for="(item, index) in songsDet.ar"
                     :key="index"
-                    ><i>{{ item.name }}</i
+                    ><i @click="saveSingerId(item.id)">{{ item.name }}</i
                     ><i>{{
                       index === songsDet.ar.length - 1 ? "" : "/"
                     }}</i></span
@@ -100,7 +99,7 @@
 </template>
     
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapActions } from "vuex";
 import MusicPlaylist from "./MusicPlaylist.vue"; // 引入播放列表组件
 
 export default {
@@ -118,6 +117,9 @@ export default {
       // 歌曲详情
       songsDet: {
         al: {},
+        name: "",
+        picUrl: "",
+        ar: [],
       },
       // 音频时长
       duration: null,
@@ -132,16 +134,21 @@ export default {
   created() {
     this.getSongDet();
   },
- mounted() {
-   // 让播放条在页面刷新未锁定时显示 鼠标发生滚动则未锁定就隐藏 随后立即删除滚动事件
-   document.onmousewheel = () => {
-    //  console.log('666')
-     this.leavePlayBar()
-     document.onmousewheel = null
-   }
- },
+  mounted() {
+    // 让播放条在页面刷新未锁定时显示 鼠标发生滚动则未锁定就隐藏 随后立即删除滚动事件
+    document.onmousewheel = () => {
+      //  console.log('666')
+      this.leavePlayBar();
+      document.onmousewheel = null;
+    };
+  },
   methods: {
-    ...mapMutations(["musicUrlMutations"]),
+    ...mapMutations([
+      "musicUrlMutations",
+      "SongIdMutations",
+      "singerIdMutations",
+    ]),
+    ...mapActions(["getSongsDetActions"]),
     // 格式化滑块值
     dataFormate(val) {
       return val;
@@ -185,9 +192,7 @@ export default {
     getSongDet() {
       // 获取到音乐 id 后才能获取到歌曲详情
       if (this.$store.state.musicUrl.id !== "") {
-        this.musicUrlMutations(
-          JSON.parse(window.localStorage.getItem("musicUrl")).id
-        );
+        this.getSongsDetActions(this.$store.state.musicUrl.id);
         this.songsDet = this.$store.state.currentMusicInfo;
       }
     },
@@ -251,6 +256,8 @@ export default {
               this.$store.state.musicUrl.id
             ) - 1;
           this.musicUrlMutations(this.$store.state.musicPlayListId[index]);
+          // 获取播放音乐详情
+          this.getSongsDetActions(this.$store.state.musicPlayListId[index]);
           this.play = true;
           this.playAudio();
         }
@@ -273,6 +280,8 @@ export default {
               this.$store.state.musicUrl.id
             ) + 1;
           this.musicUrlMutations(this.$store.state.musicPlayListId[index]);
+          // 获取播放音乐详情
+          this.getSongsDetActions(this.$store.state.musicPlayListId[index]);
           this.play = true;
           this.playAudio();
         }
@@ -292,28 +301,39 @@ export default {
       if (this.lockStatus) {
         document.querySelector(".lock").style.backgroundPosition =
           "-80px -380px";
-          this.lockStatus = false
-      }else{
-        document.querySelector(".lock").style.backgroundPosition = 
-        "-100px -400px"
-        this.lockStatus = true
+        this.lockStatus = false;
+      } else {
+        document.querySelector(".lock").style.backgroundPosition =
+          "-100px -400px";
+        this.lockStatus = true;
       }
     },
     // 触碰播放条显示
-    touchPlayBar(){
-      document.querySelector('.wrop').style.bottom = '0'
+    touchPlayBar() {
+      document.querySelector(".wrop").style.bottom = "0";
     },
     // 离开播放条事件
-    leavePlayBar(){
+    leavePlayBar() {
       // console.log('666')
       // 判断小锁状态 锁住或者播放列表打开播放条则显示 否则隐藏
-      if(this.lockStatus || this.isShow){
-        document.querySelector(".wrop").style.bottom = '0'
-      }else{
-        document.querySelector(".wrop").style.bottom = '-45px'
+      if (this.lockStatus || this.isShow) {
+        document.querySelector(".wrop").style.bottom = "0";
+      } else {
+        document.querySelector(".wrop").style.bottom = "-45px";
       }
-    }
-
+    },
+    // 点击播放条头像跳转至歌曲详情
+    saveSongId() {
+      if (this.$route.path !== "/songs/detail") {
+        this.SongIdMutations(this.$store.state.musicUrl.id);
+        this.$router.push("/songs/detail");
+      }
+    },
+    // 点击播放条歌手名跳转至歌曲详情
+    saveSingerId(id) {
+      this.singerIdMutations(id);
+      this.$router.push("/singer/detail");
+    },
   },
   computed: {},
   components: {
@@ -352,7 +372,7 @@ export default {
   width: 100%;
   height: 53px;
   background: url("../../assets/playbar.png") repeat-x;
-  transition: all .5s;
+  transition: all 0.5s;
   .contain {
     display: flex;
     justify-content: space-between;

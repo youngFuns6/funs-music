@@ -67,8 +67,6 @@ export default {
       this.$router.push("/newSongInfo");
       this.albumIdMutations(id);
       // console.log(id)
-      // 将 新碟 id 保存至本地
-        window.sessionStorage.setItem('albumId', JSON.stringify(id))
     },
   },
 };

@@ -6,11 +6,13 @@ h1 {
 html {
     min-width: 1485px;
     background-color: #80cbc4;
+    height: 100%;
 }
 
 
 
 .el-card {
+    margin-top: 20px;
 background-color: #748BA7;
 }
 .clearfix::after {
@@ -23,4 +25,12 @@ background-color: #748BA7;
 
 .el-slider__runway {
  margin: 0 ;
+}
+
+
+
+
+
+body {
+    height: 100%;
 }

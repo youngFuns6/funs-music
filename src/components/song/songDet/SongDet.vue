@@ -184,13 +184,11 @@ export default {
     // 点击歌手 存储歌手 id 并跳转至歌手详情
     getSingerId(id) {
       this.singerIdMutations(id);
-      window.sessionStorage.setItem("singerId", JSON.stringify(id));
       this.$router.push("/singer/detail");
     },
     // 点击专辑 存储专辑 id 并跳转至专辑页面
     getalbumId(id) {
       this.albumIdMutations(id);
-      window.sessionStorage.setItem("albumId", JSON.stringify(id));
       this.$router.push("/newSongInfo");
     },
   },
