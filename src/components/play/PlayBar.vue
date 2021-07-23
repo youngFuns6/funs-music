@@ -220,6 +220,7 @@ export default {
     playOver() {
       document.querySelector(".left-p-m").style.backgroundPosition = "0 -204px";
       this.duration = null;
+      this.nextSong()
     },
 
     // 拖拽滑块事件

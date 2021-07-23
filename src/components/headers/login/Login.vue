@@ -25,11 +25,11 @@
           <el-form-item label="手机号" prop="phone">
             <el-input v-model="loginForm.phone"></el-input>
           </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="loginForm.password" type="password"></el-input>
+          <el-form-item label="密码" prop="password" >
+            <el-input v-model="loginForm.password" type="password" show-password @keydown.enter.native="loginBtn"></el-input>
           </el-form-item>
           <div class="btn">
-            <el-button type="primary" size="mini" @click="loginBtn"
+            <el-button type="primary" size="mini" @click="loginBtn" 
               >登录</el-button
             >
           </div>

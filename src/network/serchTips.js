@@ -1,15 +1,21 @@
 import { request } from "../network/request";
-import Vue from 'vue'
 
 
+// 搜索建议
 export function getTips(word) {
-    
-    
     return request({
         url: `/search/suggest?keywords=${word}`,
         
-        // paramas: {
+        // params: {
         //     keywords: word
         // }
+    })
+}
+
+// 搜索结果
+export function getResult(queryInfo) {
+    return request({
+        url: '/cloudsearch',
+        params: queryInfo
     })
 }

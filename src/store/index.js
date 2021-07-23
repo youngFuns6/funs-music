@@ -44,7 +44,9 @@ export default new Vuex.Store({
     // 音乐播放列表音乐 id
     musicPlayListId: [],
     // mv id
-    mvId: ''
+    mvId: '',
+    // 用户搜索信息
+    searchValue: ''
 
 
   },
@@ -164,6 +166,12 @@ export default new Vuex.Store({
     mvIdMutations(state, id) {
       state.mvId = id
       window.sessionStorage.setItem('mvId', JSON.stringify(id))
+    },
+
+    // 用户搜索信息处理函数
+    searchValueMutations(state, value) {
+      state.searchValue = value
+      window.sessionStorage.setItem('searchValue', JSON.stringify(value))
     }
 
 

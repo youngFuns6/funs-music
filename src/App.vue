@@ -59,6 +59,11 @@ export default {
       this.mvIdMutations(JSON.parse(window.sessionStorage.getItem("mvId")));
     }
 
+    // 获取本地搜索信息
+    if(window.sessionStorage.getItem('searchValue')){
+      this.searchValueMutations(JSON.parse(window.sessionStorage.getItem('searchValue')))
+    }
+
     // 获取本地当前导航菜单的 index
     if (window.sessionStorage.getItem("activeIndex") === null) {
       this.$store.state.activeIndex = "/home";
@@ -78,6 +83,7 @@ export default {
       "updataMusicPlayListId",
       "mvIdMutations",
       "songDetMutations",
+      "searchValueMutations"
     ]),
   },
 };

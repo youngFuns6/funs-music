@@ -13,6 +13,7 @@ import SingerDet from '../components/singer/SingerDet.vue'
 import SongDet from '../components/song/songDet/SongDet.vue'
 import ToLogin from '../views/ToLogin.vue'
 import Rank from '../views/home/Rank.vue'
+import SearchResult from '../components/headers/serach/SearchResult.vue'
 
 
 
@@ -39,7 +40,8 @@ const routes = [
       { path: '/songs/detail', component: SongDet },
       { path: '/login', component:  ToLogin},
       { path: '/mvdet', component: MvDet },
-      { path: '/rank', component: Rank}
+      { path: '/rank', component: Rank },
+      { path: '/search/result', component: SearchResult}
     ],
 
   },
