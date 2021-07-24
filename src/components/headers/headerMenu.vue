@@ -88,11 +88,11 @@
     <!-- 底部链接 -->
 
     <div class="mylink" v-show="$route.path === '/login' ? false : true ">
-      <a href="https://github.com/youngFuns6/funs-music">
+      <a href="https://github.com/youngFuns6/funs-music" target="_blank">
         <i class="iconfont icon-github"></i>
         <i>github 地址</i>
       </a>
-      <a href="">
+      <a href="https://gitee.com/ycjmeet" target="_blank">
         <i class="iconfont icon-git"> </i>
         <i>gitee 地址</i>
       </a>
@@ -336,22 +336,22 @@ h1 {
 }
 .mylink {
   width: 100%;
-  height: 100px;
+  height: 40px;
   margin-top: 60px;
   padding-bottom: 30px;
   border-top: 1px solid #666;
-  background-color: #98d6ce;
+  background-color: #545C64;
   display: flex;
   flex-direction: column;
   a {
     display: flex;
     align-items: center;
-    margin: 20px 0 0 120px;
+    margin: 10px 0 0 120px;
     text-decoration: none;
-    color: #666;
-    font-size: 20px;
+    color: #333;
+    font-size: 16px;
     i:first-child {
-      font-size: 30px;
+      font-size: 20px;
       margin-right: 10px;
     }
     i:last-child {

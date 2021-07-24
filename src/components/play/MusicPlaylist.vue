@@ -178,7 +178,7 @@ export default {
 
         // 歌词滚动处理函数
         handlerLrcSco(lrcWrop, slide, lrc, callback);
-        // 拿到滚动函数 回调传的参数  此方法有个小 bug 滑块高度 滚动时会有一个偏差
+        // 拿到滚动函数 传的参数  此方法有个小 bug 滑块高度 滚动时会有一个偏差
         function callback(value) {
           // 动态设置滑块高度 函数
           handlerSlide(slide, value, wropHeight);

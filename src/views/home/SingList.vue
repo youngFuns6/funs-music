@@ -207,10 +207,15 @@ export default {
   z-index: 1111;
 }
 
+.el-card {
+  min-height: 700px;
+}
+
 .content ul {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  height: 100%;
 }
 .content li {
   position: relative;

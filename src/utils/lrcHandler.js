@@ -27,7 +27,7 @@ export function handlerSlide(slider, lrcHeight, wropHeight) {
 // slide 滑块元素
 // lrc 歌词元素
 // lineHeight 每行歌词行高
-// callback 回调
+// callback 
 export function handlerLrcSco(lrcWrop, slide, lrc, callback) {
     
     // 滑块滚动增量
@@ -61,7 +61,7 @@ export function handlerLrcSco(lrcWrop, slide, lrc, callback) {
         // 歌词变化位置
         lrc.style.top = -y / lrcWrop.clientHeight * lrcHeight + 'px'
         // console.log(lrc.clientHeight)
-        // 通过回调传参
+        // 传参
         callback(lrcHeight)
     });
 }

@@ -1,5 +1,4 @@
 import axios from 'axios'
-import Vue from 'vue'
 import Nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 // import { getCookie } from '../utils/cookie'
@@ -13,7 +12,7 @@ export function request(config) {
         // 请求前显示加载动画
         // Vue.prototype.$loading.service({
         //     lock: true,
-        //     text: '你是最帅的',
+        //     text: 'loading',
         //     spinner: 'el-icon-loading',
         //     background: 'rgba(0, 0, 0, 0.7)'
         // })

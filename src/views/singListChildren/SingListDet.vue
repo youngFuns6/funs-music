@@ -110,5 +110,6 @@ export default {
   display: flex;
   justify-content: center;
   margin: 20px 0 50px 0;
+  height: 100%;
 }
 </style>
