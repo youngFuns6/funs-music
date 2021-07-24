@@ -55,7 +55,7 @@ export default {
     // 获取 banner 图数据
     async getBannerImgRef() {
       const { data: res } = await getBannerImg();
-      // console.log(res);
+      console.log(res);
       if (res.code !== 200) {
         return this.$message.error("获取 banner 图失败");
       }

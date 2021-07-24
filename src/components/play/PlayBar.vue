@@ -37,7 +37,8 @@
                   >
                 </span>
               </p>
-              <div>
+              <div class="playbar-wrop">
+                <i class="loadingAn"></i>
                 <!-- 播放滑块 -->
                 <el-slider
                   v-model="playValue"
@@ -46,7 +47,8 @@
                   @change="slideChange"
                   @mousedown="flag = true"
                   @mouseup="flag = false"
-                ></el-slider>
+                >
+                </el-slider>
                 <p class="m_time">
                   <i>{{ (playValue * 1000) | secondFormate }}</i>
                   <i>{{ (duration * 1000) | secondFormate }}</i>
@@ -72,7 +74,11 @@
                 v-show="audioShow"
               ></el-slider>
             </a>
-            <a title="循环"></a>
+            <a
+              :title="titleTip"
+              class="loopStatus"
+              @click="changeLoopStatus"
+            ></a>
             <a title="播放列表" @click="close"
               ><i>{{ $store.state.musicPlayListId.length }}</i></a
             >
@@ -91,6 +97,8 @@
             ref="audioRef"
             @timeupdate="updateTime"
             @ended="playOver"
+            @waiting="loadingAn"
+            :loop="isLoop"
           ></audio>
         </div>
       </el-col>
@@ -129,6 +137,13 @@ export default {
       audioValue: 50,
       // 控制播放条小锁状态
       lockStatus: false,
+      // 单曲循环状态
+      isLoop: false,
+      // 循环状态  0 代表列表播放  1 代表单曲循环  2 代表随机循环
+      loopStatus: 0,
+      // 循环图标提示
+      // 循环图标提示信息
+      titleTip: "列表播放",
     };
   },
   created() {
@@ -149,10 +164,6 @@ export default {
       "singerIdMutations",
     ]),
     ...mapActions(["getSongsDetActions"]),
-    // 格式化滑块值
-    dataFormate(val) {
-      return val;
-    },
     // 点击叉号关闭列表
     close() {
       this.isShow = !this.isShow;
@@ -214,13 +225,32 @@ export default {
       if (parseInt(this.playValue) === parseInt(this.$refs.audioRef.duration)) {
         this.playValue = 0;
       }
+      // 顺利播放时关闭动画
+      document.querySelector(".loadingAn").style.display = "none";
     },
 
     // 播放结束事件
     playOver() {
       document.querySelector(".left-p-m").style.backgroundPosition = "0 -204px";
       this.duration = null;
-      this.nextSong()
+      // 判断播放状态 播放下一首歌曲
+      if (this.loopStatus === 0) {
+        this.nextSong();
+      } else if (this.loopStatus === 2) {
+        // 循环列表
+        let loopList = this.$store.state.musicPlayListId;
+        // 随机取得循环列表的下标
+        let index = Math.floor(Math.random() * loopList.length + 1) - 1;
+        // 获取播放地址信息
+        this.musicUrlMutations(loopList[index]);
+        // 获取播放音乐详情
+        this.getSongsDetActions(loopList[index]);
+        this.play = true;
+        this.playAudio();
+      } else if (this.loopStatus === 1) {
+        this.play = true;
+        this.playAudio();
+      }
     },
 
     // 拖拽滑块事件
@@ -328,12 +358,53 @@ export default {
       if (this.$route.path !== "/songs/detail") {
         this.SongIdMutations(this.$store.state.musicUrl.id);
         this.$router.push("/songs/detail");
+      } else {
+        // 已处在歌曲详情页面则刷新
+        this.$router.go(0);
       }
     },
     // 点击播放条歌手名跳转至歌曲详情
     saveSingerId(id) {
       this.singerIdMutations(id);
       this.$router.push("/singer/detail");
+    },
+    // 音频加载动画
+    loadingAn() {
+      // console.log('888')
+      // 加载时显示动画
+      document.querySelector(".loadingAn").style.display = "block";
+    },
+    // 单曲循环事件
+    changeLoopStatus() {
+      // 如果循环状态等于 0  让其变成随机循环
+      if (this.loopStatus === 0) {
+        // 让其循环状态变为 2
+        this.loopStatus = 2;
+        // 提示信息
+        this.titleTip = "随机循环";
+        this.isLoop = false;
+        // 改变图标
+        document.querySelector(".loopStatus").style.backgroundPosition =
+          "-66px -248px";
+      } else if (this.loopStatus === 2) {
+        // 让其循环状态变为 1
+        this.loopStatus = 1;
+        // 提示信息
+        this.titleTip = "单曲循环";
+        this.isLoop = true;
+        // 改变图标
+        document.querySelector(".loopStatus").style.backgroundPosition =
+          "-66px -344px";
+      } else if ((this.loopStatus = 1)) {
+        // 让其状态变为 0
+        this.loopStatus = 0;
+        // 提示信息
+        this.titleTip = "列表播放";
+        this.isLoop = false;
+        // 改变图标
+        document.querySelector(".loopStatus").style.backgroundPosition =
+          "-3px -344px";
+      }
     },
   },
   computed: {},
@@ -585,5 +656,17 @@ export default {
   left: 50%;
   bottom: 47px;
   transform: translateX(-50%);
+}
+.playbar-wrop {
+  position: relative;
+  .loadingAn {
+    position: absolute;
+    right: 90px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    display: none;
+    background: url(../../assets/loading.gif) no-repeat;
+  }
 }
 </style>

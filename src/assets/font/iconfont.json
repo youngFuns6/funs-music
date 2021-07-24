@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "348533",
+      "name": "git",
+      "font_class": "git",
+      "unicode": "eaf5",
+      "unicode_decimal": 60149
+    },
+    {
       "icon_id": "398173",
       "name": "音乐",
       "font_class": "yinle",
@@ -95,6 +102,13 @@
       "font_class": "xinxi",
       "unicode": "e65e",
       "unicode_decimal": 58974
+    },
+    {
+      "icon_id": "7239484",
+      "name": "github",
+      "font_class": "github",
+      "unicode": "e6f6",
+      "unicode_decimal": 59126
     },
     {
       "icon_id": "7761519",

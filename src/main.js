@@ -77,6 +77,8 @@ Vue.prototype.$loading = Loading
 Vue.prototype.$bus = new Vue()
 
 
+
+
 // 时间过滤器
 Vue.filter('dataFormate', function (time) {
   let dt = new Date(time);

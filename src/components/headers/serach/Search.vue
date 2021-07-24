@@ -69,7 +69,7 @@ export default {
   data() {
     return {
       // 用户输入信息
-      inputValue: this.$store.state.searchValue,
+      inputValue: '',
       // 提示信息
       tipInfo: {
         song: [],

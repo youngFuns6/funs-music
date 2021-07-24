@@ -85,6 +85,19 @@
 
     <router-view @emitLogin="ctrLogin"></router-view>
 
+    <!-- 底部链接 -->
+
+    <div class="mylink" v-show="$route.path === '/login' ? false : true ">
+      <a href="https://github.com/youngFuns6/funs-music">
+        <i class="iconfont icon-github"></i>
+        <i>github 地址</i>
+      </a>
+      <a href="">
+        <i class="iconfont icon-git"> </i>
+        <i>gitee 地址</i>
+      </a>
+    </div>
+
     <!-- 登录对话框 -->
     <login-dialog
       v-show="isShow"
@@ -320,5 +333,33 @@ h1 {
   left: 0;
   bottom: 0;
   z-index: 99999;
+}
+.mylink {
+  width: 100%;
+  height: 100px;
+  margin-top: 60px;
+  padding-bottom: 30px;
+  border-top: 1px solid #666;
+  background-color: #98d6ce;
+  display: flex;
+  flex-direction: column;
+  a {
+    display: flex;
+    align-items: center;
+    margin: 20px 0 0 120px;
+    text-decoration: none;
+    color: #666;
+    font-size: 20px;
+    i:first-child {
+      font-size: 30px;
+      margin-right: 10px;
+    }
+    i:last-child {
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }
 </style>
