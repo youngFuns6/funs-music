@@ -5,52 +5,40 @@ const headerMenu = () => import(/* webpackChunkName: "group-head" */ '../compone
 
 
 // import Home from '../views/home/Home.vue'
+// import MyMusic from '../views/home/MyMusic.vue'
+// import Singer from '../views/home/Singer.vue'
+// import SingList from '../views/home/SingList.vue'
+// import MvDet from '../components/mv/MvDet.vue'
+// import newSongInfo from '../views/homeChildren/newSongInfo.vue'
+// import SingListDet from '../views/singListChildren/SingListDet.vue'
+// import SingerDet from '../components/singer/SingerDet.vue'
+// import ToLogin from '../views/ToLogin.vue'
+// import SongDet from '../components/song/songDet/SongDet.vue'
+// import Rank from '../views/home/Rank.vue'
+// import SearchResult from '../components/headers/serach/SearchResult.vue'
+
 
 const Home = () => import(/* webpackChunkName: "group-head" */ '../views/home/Home.vue')
 
-
-// import MyMusic from '../views/home/MyMusic.vue'
-
 const MyMusic = () => import(/* webpackChunkName: "group-music" */ '../views/home/MyMusic.vue')
-
-
-// import Singer from '../views/home/Singer.vue'
 
 const Singer = () => import(/* webpackChunkName: "group-music" */ '../views/home/Singer.vue')
 
-// import SingList from '../views/home/SingList.vue'
-
 const SingList = () => import(/* webpackChunkName: "group-music" */ '../views/home/SingList.vue')
-
-// import MvDet from '../components/mv/MvDet.vue'
 
 const MvDet = () => import(/* webpackChunkName: "group-det" */ '../components/mv/MvDet.vue')
 
-// import newSongInfo from '../views/homeChildren/newSongInfo.vue'
-
 const newSongInfo = () => import(/* webpackChunkName: "group-info" */ '../views/homeChildren/newSongInfo.vue')
-
-// import SingListDet from '../views/singListChildren/SingListDet.vue'
 
 const SingListDet = () => import(/* webpackChunkName: "group-det" */ '../views/singListChildren/SingListDet.vue')
 
-// import SingerDet from '../components/singer/SingerDet.vue'
-
 const SingerDet = () => import(/* webpackChunkName: "group-det" */ '../components/singer/SingerDet.vue')
-
-// import SongDet from '../components/song/songDet/SongDet.vue'
 
 const SongDet = () => import(/* webpackChunkName: "group-det" */ '../components/song/songDet/SongDet.vue')
 
-// import ToLogin from '../views/ToLogin.vue'
-
 const ToLogin = () => import(/* webpackChunkName: "group-head" */ '../views/ToLogin.vue')
 
-// import Rank from '../views/home/Rank.vue'
-
 const Rank = () => import(/* webpackChunkName: "group-info" */ '../views/home/Rank.vue')
-
-// import SearchResult from '../components/headers/serach/SearchResult.vue'
 
 const SearchResult = () => import(/* webpackChunkName: "group-search" */ '../components/headers/serach/SearchResult.vue')
 
@@ -77,10 +65,10 @@ const routes = [
       { path: '/singlist/detail', component: SingListDet },
       { path: '/singer/detail', component: SingerDet },
       { path: '/songs/detail', component: SongDet },
-      { path: '/login', component:  ToLogin},
+      { path: '/login', component: ToLogin },
       { path: '/mvdet', component: MvDet },
       { path: '/rank', component: Rank },
-      { path: '/search/result', component: SearchResult}
+      { path: '/search/result', component: SearchResult }
     ],
 
   },

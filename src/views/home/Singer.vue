@@ -32,7 +32,7 @@
             </template>
           </singer-show>
         </div>
-        <el-card v-show="isShow_1">
+        <el-card v-show="isShow_1"> 
           <ul>
             <li
               class="bt"
@@ -155,19 +155,21 @@ export default {
       if (this.ListInfoImg.length === 10) {
         this.ListInfoImg = [];
       }
-      this.ListInfoImg.push(...res.artists);
+      if(this.ListInfoImg.length !== 30){
+        this.ListInfoImg.push(...res.artists)
+      }
 
       // 监听滚动事件
       window.addEventListener("scroll", () => {
         // console.log(document.documentElement.scrollTop)
-
+ console.log("999");
         // 判断滚动条是否到页面底部
         if (
           document.documentElement.scrollTop +
             document.documentElement.clientHeight >=
           document.body.scrollHeight
         ) {
-          // console.log("999");
+          console.log("999");
 
           this.HotQueryInfo.offset = 30 + this.count;
           // 每次更新 10 位歌手
@@ -242,6 +244,7 @@ export default {
 </script>
     
 <style lang='less' scoped>
+
 .el-card {
   margin: 30px 0;
   background-color: #dad6d3;

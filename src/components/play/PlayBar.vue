@@ -1,5 +1,5 @@
 <template>
-  <div class="wrop" @mouseenter="touchPlayBar" @mouseleave="leavePlayBar">
+  <div class="wrop-plybar" @mouseenter="touchPlayBar" @mouseleave="leavePlayBar">
     <div class="r_s_wrop">
       <a href="#" class="lock" @click.prevent="lock"></a>
     </div>
@@ -341,16 +341,16 @@ export default {
     },
     // 触碰播放条显示
     touchPlayBar() {
-      document.querySelector(".wrop").style.bottom = "0";
+      document.querySelector(".wrop-plybar").style.bottom = "0";
     },
     // 离开播放条事件
     leavePlayBar() {
       // console.log('666')
       // 判断小锁状态 锁住或者播放列表打开播放条则显示 否则隐藏
       if (this.lockStatus || this.isShow) {
-        document.querySelector(".wrop").style.bottom = "0";
+        document.querySelector(".wrop-plybar").style.bottom = "0";
       } else {
-        document.querySelector(".wrop").style.bottom = "-45px";
+        document.querySelector(".wrop-plybar").style.bottom = "-45px";
       }
     },
     // 点击播放条头像跳转至歌曲详情
@@ -437,7 +437,7 @@ export default {
     background-position: -100px -400px;
   }
 }
-.wrop {
+.wrop-plybar {
   position: absolute;
   left: 0;
   bottom: 0;
