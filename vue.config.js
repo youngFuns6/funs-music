@@ -1,7 +1,12 @@
+
+const webpack = require('webpack')
+
 module.exports = {
+    
     chainWebpack: config => {
         // 发布模式
         config.when(process.env.NODE_ENV === 'production', config => {
+           
            
             // 设置打包入口
             config.entry('app').clear().add('./src/main-prod.js')
@@ -29,5 +34,13 @@ module.exports = {
         //     console.log(args[0].isProd)
         //     return args
         // })
+    },
+    configureWebpack: () => {
+        return {
+            plugins: [
+                new webpack.BannerPlugin('最终版权归 youngFuns 所有')
+            ],
+    }
+          
     }
 }
