@@ -29,19 +29,19 @@ npm run build
 #### 项目展示
 
 ##### 首页
-![Image text](https://gitee.com/ycjmeet/funs-music/blob/master/static/1%E3%80%81%E9%A6%96%E9%A1%B5.png)
+![Image text](https://gitee.com/ycjmeet/fun-music/blob/master/static/1%E3%80%81%E9%A6%96%E9%A1%B5.png)
 
 ##### 登录
-![Image text](https://gitee.com/ycjmeet/funs-music/blob/master/static/2%E3%80%81%E7%99%BB%E5%BD%95%E9%A1%B5.png)
+![Image text](https://gitee.com/ycjmeet/fun-music/blob/master/static/2%E3%80%81%E7%99%BB%E5%BD%95%E9%A1%B5.png)
 
 ##### 歌手
-![Image text](https://gitee.com/ycjmeet/funs-music/blob/master/static/3%E3%80%81%E6%AD%8C%E6%89%8B.png)
+![Image text](https://gitee.com/ycjmeet/fun-music/blob/master/static/3%E3%80%81%E6%AD%8C%E6%89%8B.png)
 
 ##### 歌单
-![Image text](https://gitee.com/ycjmeet/funs-music/blob/master/static/4%E3%80%81%E6%AD%8C%E5%8D%95.png)
+![Image text](https://gitee.com/ycjmeet/fun-music/blob/master/static/4%E3%80%81%E6%AD%8C%E5%8D%95.png)
 
 ##### 排行榜
-![Image text](https://gitee.com/ycjmeet/funs-music/blob/master/static/5%E3%80%81%E6%8E%92%E8%A1%8C%E6%A6%9C.png)
+![Image text](https://gitee.com/ycjmeet/fun-music/blob/master/static/5%E3%80%81%E6%8E%92%E8%A1%8C%E6%A6%9C.png)
 
 ##### 播放条
-![Image text](https://gitee.com/ycjmeet/funs-music/blob/master/static/6%E3%80%81playbar.png)
+![Image text](https://gitee.com/ycjmeet/fun-music/blob/master/static/6%E3%80%81playbar.png)
