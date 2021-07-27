@@ -6,7 +6,8 @@ import 'nprogress/nprogress.css'
 export function request(config) {
     const instance = axios.create({
         baseURL: 'http://localhost:3000/',
-        withCredentials: true  // 允许请求携带 cookie
+        withCredentials: true,  // 允许请求携带 cookie
+       
     })
     instance.interceptors.request.use(config => {
         // 请求前显示加载动画
@@ -24,8 +25,9 @@ export function request(config) {
         // Vue.prototype.$loading.service().close()
         Nprogress.done()
         return config
-    }
+    })
 
-    )
+
+
     return instance(config)
 }

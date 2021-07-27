@@ -442,6 +442,7 @@ export default {
   left: 0;
   bottom: 0;
   width: 100%;
+  min-width: 1485px;
   height: 53px;
   background: url("../../assets/playbar.png") repeat-x;
   transition: all 0.5s;

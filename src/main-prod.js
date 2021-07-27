@@ -4,11 +4,12 @@ import router from './router'
 import store from './store'
 import './assets/css/global.css'
 import './assets/font/iconfont.css'
+import './assets/css/reset.css'
 import md5 from 'js-md5'
 Vue.prototype.$md5 = md5
 
 
-Vue.use(ElementUI)
+
 // 按需导入 element ui 组件
 // import {
 //     Button,
@@ -38,7 +39,7 @@ Vue.use(ElementUI)
 // } from 'element-ui'
 
 
-// 注册 element-ui 组件
+// // 注册 element-ui 组件
 // Vue.use(Menu)
 // Vue.use(MenuItem)
 // Vue.use(Row)
@@ -63,11 +64,7 @@ Vue.use(ElementUI)
 // Vue.use(Backtop)
 
 
-
-
-
-
-Vue.prototype.$message = Message
+// Vue.prototype.$message = Message
 
 // 事件总线
 Vue.prototype.$bus = new Vue()

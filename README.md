@@ -28,6 +28,8 @@ npm run build
 
 #### 项目展示
 
+#### [项目在线地址](http://47.100.187.223/)
+
 ##### 首页
 ![Image text](https://gitee.com/ycjmeet/fun-music/blob/master/static/1%E3%80%81%E9%A6%96%E9%A1%B5.png)
 
